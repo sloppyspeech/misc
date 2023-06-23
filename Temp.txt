@@ -3,7 +3,7 @@ Now use Pandas & matplotlib/seaborn in python and show the final results
 
 1 - create a new column "Greenhorn", Find people with annual income > 100000 and no credit card outstanding 2,
    ~ if above condition is met put value true else put false.
-2 - Create a chart of number of blacklisted customers by Income. Put the income in 4 buckets 0-250K,250K-500K,500K-750K,750K-1M to arrive at count
+2 - Create a chart(Bar chart)  of number of blacklisted customers by Income. Put the income in 4 buckets 0-250K,250K-500K,500K-750K,750K-1M to arrive at count
 3 - Make a chart of the point number 2
 4 - create a prospect_customer column by applying following conditions
   ~ if the column "has_loans_with_us" is false AND "has_loans_with_others" is true AND income > 100K and credit card outstanding is < 10K
