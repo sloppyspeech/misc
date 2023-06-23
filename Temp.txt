@@ -17,4 +17,5 @@ Now use Pandas & matplotlib/seaborn in python and show the final results
 7 - Find out how many students have "ru" in their email domain, create a new column called "is_russian"
     ~ if the email has .ru put true in the column else put false.
     ~ Print count of students meeting the criteria.
-8 - Find how many russian email domain student's credit card outstanding amount, just the amount in "Dollars"
+8 - Find how many russian email domain student's have credit card outstanding amount, just the amount in "Dollars"
+   ~ i.e. just sum it up and show e.g. if there are 2 students with 1K,2K outstanding amount, print 2 Students - 3K outstandinng
