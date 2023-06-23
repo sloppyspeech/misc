@@ -11,7 +11,7 @@ Now use Pandas & matplotlib/seaborn in python and show the final results
 5- Department column is empty in first 4000 rows, populate the column based on the statistical distribution of data in last 1000 columns
   ~ In last 1000 columns if  value "Grocery" appears in 10% of the rows, populate 4000%(10/100) [ i.e. 10% ] rows with Grocery
   ~ Do it for all the values. 
-6 -  Gender wise Loans
+6 -  Gender wise Loans ( Bar chart ) 
   ~ % gender distribution of loan_with_us
   ~ % gender distribution of loan_with_others
 7 - Find out how many students have "ru" in their email domain, create a new column called "is_russian"
