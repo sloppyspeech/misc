@@ -1,4 +1,4 @@
-id,first_name,last_name,email,gender,ip_address,age,phone_number,annual_income,credit_card_number,credit_card_type,credit_card_expiration_date,credit_card_outstanding_amt,has_loans_with_us,has_loans_with_others,is_employed,is_blacklisted,
+id,first_name,last_name,email,gender,ip_address,age,phone_number,annual_income,credit_card_number,credit_card_type,credit_card_expiration_date,credit_card_outstanding_amt,has_loans_with_us,has_loans_with_others,is_employed,is_blacklisted,department,
 1,Waly,Marqyes,wmarqyes0@360.cn,Female,101.245.79.67,78,127-357-3672,$889599.00,3583824844820441,jcb,04/2024,$23242.33,false,false,true,true,
 2,Lorie,Haylor,lhaylor1@edublogs.org,Female,70.11.230.112,59,871-770-1031,$245456.85,5602255661363425,bankcard,08/2026,$91795.14,true,false,false,false,
 3,Berton,Westoff,bwestoff2@amazon.de,Male,14.120.205.50,79,592-870-2185,$183656.14,4175003282469217,visa-electron,06/2027,$83746.85,true,true,false,true,
