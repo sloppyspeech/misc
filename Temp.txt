@@ -1,5 +1,5 @@
 The file consists of customer details including income and credit cards.
-Now use Pandas in python and arrive at the final results
+Now use Pandas & matplotlib/seaborn in python and show the final results
 
 1 - create a new column "Greenhorn", Find people with annual income > 100000 and no credit card outstanding 2,
    ~ if above condition is met put value true else put false.
@@ -14,3 +14,5 @@ Now use Pandas in python and arrive at the final results
 6 -  Gender wise Loans
   ~ % gender distribution of loan_with_us
   ~ % gender distribution of loan_with_others
+7 - Find out how many students have "ru" in their email domain, create a new column called "is_russian"
+    ~ if the email has .ru put true in the column else put false.
