@@ -1,0 +1,16 @@
+The file consists of customer details including income and credit cards.
+Now use Pandas in python and arrive at the final results
+
+1 - create a new column "Greenhorn", Find people with annual income > 100000 and no credit card outstanding 2,
+   ~ if above condition is met put value true else put false.
+2 - Create a chart of number of blacklisted customers by Income. Put the income in 4 buckets 0-250K,250K-500K,500K-750K,750K-1M to arrive at count
+3 - Make a chart of the point number 2
+4 - create a prospect_customer column by applying following conditions
+  ~ if the column "has_loans_with_us" is false AND "has_loans_with_others" is true AND income > 100K and credit card outstanding is < 10K
+    ~ if above condition is put value "New Prospect" else put blank
+5- Department column is empty in first 4000 rows, populate the column based on the statistical distribution of data in last 1000 columns
+  ~ In last 1000 columns if  value "Grocery" appears in 10% of the rows, populate 4000%(10/100) [ i.e. 10% ] rows with Grocery
+  ~ Do it for all the values. 
+6 -  Gender wise Loans
+  ~ % gender distribution of loan_with_us
+  ~ % gender distribution of loan_with_others
