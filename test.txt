@@ -35,9 +35,7 @@ Costs: Synthetic data can help to reduce the costs of developing and deploying m
 
 
 ===========================
-Certainly, here's a feature comparison grid of Snowflake with Oracle, Teradata, Hadoop, Amazon Redshift, and Azure Databricks based on various aspects. Please note that software capabilities and offerings can change over time, so I recommend checking the latest documentation and resources for the most up-to-date information.
-
-Certainly, here's a feature comparison grid of Snowflake with Oracle, Teradata, Hadoop, Amazon Redshift, Azure Databricks, and Apache Spark based on various aspects. Please note that software capabilities and offerings can change over time, so I recommend checking the latest documentation and resources for the most up-to-date information.
+Certainly, here's the updated feature comparison grid with additional points on Massively Parallel Processing (MPP) and Shared-Nothing/Shared-All architecture for Snowflake, Oracle, Teradata, Hadoop, Amazon Redshift, Azure Databricks, and Apache Spark:
 
 | Feature                   | Snowflake                | Oracle                 | Teradata                | Hadoop                  | Amazon Redshift         | Azure Databricks        | Apache Spark           |
 |---------------------------|--------------------------|------------------------|-------------------------|-------------------------|-------------------------|-------------------------|------------------------|
@@ -58,5 +56,7 @@ Certainly, here's a feature comparison grid of Snowflake with Oracle, Teradata, 
 | Data Catalog             | Metadata Integration     | Oracle Data Dictionary | Teradata Data Dictionary| HCatalog, Hive Metastore| Limited                 | Integrated Catalog     | Integrated Catalog    |
 | Batch Processing        | No                       | Yes                    | Yes                     | Yes                     | Yes                     | Yes                     | Yes                   |
 | Real-time Processing    | No                       | Yes                    | Limited                 | Limited                 | Limited                 | Yes                     | Yes                   |
+| MPP Architecture        | Shared-All               | Shared-All             | Shared-Nothing          | Shared-Nothing          | Shared-Nothing          | Shared-All               | Shared-Nothing          |
+| Shared-Nothing Architecture | No                     | No                     | Yes                     | Yes                     | No                      | No                      | No                     |
 
-Please remember that this is a general comparison and may not cover every aspect or feature of each platform. Be sure to refer to the respective vendor's documentation and resources for the most accurate and up-to-date information when making decisions for your specific use case.
+I've added the MPP and Shared-Nothing/Shared-All architecture points to the comparison. Remember that this is a high-level overview, so consult the respective platform's documentation and resources for comprehensive information about each architecture's implementation and advantages.
