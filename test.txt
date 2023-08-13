@@ -37,23 +37,26 @@ Costs: Synthetic data can help to reduce the costs of developing and deploying m
 ===========================
 Certainly, here's a feature comparison grid of Snowflake with Oracle, Teradata, Hadoop, Amazon Redshift, and Azure Databricks based on various aspects. Please note that software capabilities and offerings can change over time, so I recommend checking the latest documentation and resources for the most up-to-date information.
 
-| Feature                   | Snowflake                | Oracle                 | Teradata                | Hadoop                  | Amazon Redshift         | Azure Databricks        |
-|---------------------------|--------------------------|------------------------|-------------------------|-------------------------|-------------------------|-------------------------|
-| Deployment Model         | Cloud-based SaaS        | On-premises or Cloud   | On-premises or Cloud    | On-premises or Cloud    | Cloud-based            | Cloud-based            |
-| Data Storage             | Centralized              | Tablespaces            | Distributed across AMPs | Distributed HDFS        | Columnar                | Distributed Data Lake   |
-| Data Processing          | Separated from Storage   | Integrated             | Separated from Storage  | Separated from Storage  | Separated from Storage  | Unified Analytics      |
-| Query Language           | SQL                      | SQL                    | SQL                     | Various languages       | SQL                     | SQL, Spark             |
-| Concurrency              | High                     | High                   | High                    | Moderate                | Moderate                | High                    |
-| Scalability              | Elastic                  | Scalable               | Scalable                | Scalable                | Scalable                | Scalable                |
-| Performance              | High                     | High                   | High                    | Variable                | High                    | High                    |
-| Data Partitioning        | Virtual Warehouses       | Partitions, Sharding   | AMPs                    | HDFS Blocks            | Distribution Keys       | Data Lake Partitioning |
-| Data Replication         | Automatic                | Oracle Data Guard      | Teradata Replication    | HDFS Replication        | Automatic               | Azure Data Factory     |
-| Data Integration         | ETL Tools, Integrations  | Oracle Data Integrator | Teradata ETL,           | Various Tools           | Data Pipelines          | Data Factory, Integrations |
-| Security                 | Role-Based Access        | Role-Based Access     | Role-Based Access      | Kerberos, ACLs          | VPC, IAM                | Role-Based Access, ACLs |
-| In-Memory Processing     | Yes                      | Yes                    | Yes                     | No                      | Yes                     | Yes                     |
-| Cost Model               | Pay-as-You-Go            | License + Maintenance | License + Maintenance  | Open Source             | Pay-as-You-Go           | Pay-as-You-Go           |
-| Managed Service          | Yes                      | No                     | No                      | No                      | Yes                     | Yes                     |
-| Machine Learning         | Integrations with ML Tools| Oracle Machine Learning| Teradata ML Engine      | Integrations with ML Tools| Limited               | Integrated ML Libraries|
-| Data Catalog             | Metadata Integration     | Oracle Data Dictionary | Teradata Data Dictionary| HCatalog, Hive Metastore| Limited                 | Integrated Catalog     |
+Certainly, here's a feature comparison grid of Snowflake with Oracle, Teradata, Hadoop, Amazon Redshift, Azure Databricks, and Apache Spark based on various aspects. Please note that software capabilities and offerings can change over time, so I recommend checking the latest documentation and resources for the most up-to-date information.
 
-Please keep in mind that this comparison is a general overview and may not cover every nuance or feature of each platform. Always refer to the respective vendor's documentation and resources for the most accurate and up-to-date information when making a decision for your specific use case.
+| Feature                   | Snowflake                | Oracle                 | Teradata                | Hadoop                  | Amazon Redshift         | Azure Databricks        | Apache Spark           |
+|---------------------------|--------------------------|------------------------|-------------------------|-------------------------|-------------------------|-------------------------|------------------------|
+| Deployment Model         | Cloud-based SaaS        | On-premises or Cloud   | On-premises or Cloud    | On-premises or Cloud    | Cloud-based            | Cloud-based            | On-premises or Cloud   |
+| Data Storage             | Centralized              | Tablespaces            | Distributed across AMPs | Distributed HDFS        | Columnar                | Unified Storage        | Distributed HDFS       |
+| Data Processing          | Separated from Storage   | Integrated             | Separated from Storage  | Separated from Storage  | Unified Analytics       | Unified Analytics       | Unified Analytics      |
+| Query Language           | SQL                      | SQL                    | SQL                     | Various languages       | SQL                     | SQL, Spark             | Spark SQL, Scala, Java |
+| Concurrency              | High                     | High                   | High                    | Variable                | Moderate                | High                    | High                   |
+| Scalability              | Elastic                  | Scalable               | Scalable                | Scalable                | Scalable                | Scalable                | Scalable               |
+| Performance              | High                     | High                   | High                    | Variable                | High                    | High                    | High                   |
+| Data Partitioning        | Virtual Warehouses       | Partitions, Sharding   | AMPs                    | HDFS Blocks            | Distribution Keys       | Data Lake Partitioning | Data Partitioning      |
+| Data Replication         | Automatic                | Oracle Data Guard      | Teradata Replication    | HDFS Replication        | Automatic               | Azure Data Factory     | Data Replication       |
+| Data Integration         | ETL Tools, Integrations  | Oracle Data Integrator | Teradata ETL,           | Various Tools           | Data Pipelines          | Data Factory, Integrations | ETL Tools, Integrations|
+| Security                 | Role-Based Access        | Role-Based Access     | Role-Based Access      | Kerberos, ACLs          | VPC, IAM                | Role-Based Access, ACLs | Role-Based Access     |
+| In-Memory Processing     | Yes                      | Yes                    | Yes                     | No                      | Yes                     | Yes                     | Yes                    |
+| Managed Service          | Yes                      | No                     | No                      | No                      | Yes                     | Yes                     | No                     |
+| Machine Learning         | Integrations with ML Tools| Oracle Machine Learning| Teradata ML Engine      | Integrations with ML Tools| Limited               | Integrated ML Libraries| ML Libraries, MLib    |
+| Data Catalog             | Metadata Integration     | Oracle Data Dictionary | Teradata Data Dictionary| HCatalog, Hive Metastore| Limited                 | Integrated Catalog     | Integrated Catalog    |
+| Batch Processing        | No                       | Yes                    | Yes                     | Yes                     | Yes                     | Yes                     | Yes                   |
+| Real-time Processing    | No                       | Yes                    | Limited                 | Limited                 | Limited                 | Yes                     | Yes                   |
+
+Please remember that this is a general comparison and may not cover every aspect or feature of each platform. Be sure to refer to the respective vendor's documentation and resources for the most accurate and up-to-date information when making decisions for your specific use case.
