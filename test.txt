@@ -167,3 +167,115 @@ Machine Learning (e.g., TensorFlow, scikit-learn);Applying statistical and machi
 Hadoop;Designing and implementing efficient data processing pipelines;Medium
 Data Warehouse Platforms (e.g., SAP, Birst);Managing data lifecycle, including storage, retrieval, and archiving;Medium
 Project Management and System Development Methodology;Utilizing project management and system development methodologies for efficient data warehousing;High
+
+
+
+
+
+
+
+Principal Architect (Big Data & Data Warehousing)
+
+Job Description
+
+As a Principal Architect, you will play a pivotal role in shaping the technical landscape of our Big Data project within the retail banking domain. Your expertise will span across Big Data, Data Warehousing, Artificial Intelligence (AI), and Machine Learning (ML). You’ll collaborate with cross-functional teams, including Tribes, Feature Teams, and Chapters, to drive innovative solutions and ensure seamless data management.
+
+Key Responsibilities:
+
+Architectural Leadership:
+
+
+Define and drive the overall technical architecture for our Big Data project, ensuring scalability, reliability, and performance.
+Collaborate with stakeholders to align architectural decisions with business goals and long-term vision.
+Provide thought leadership on emerging technologies, best practices, and industry trends.
+
+
+Data Strategy and Governance:
+
+Develop and maintain a robust data strategy, encompassing data acquisition, storage, processing, and analytics.
+Establish data governance practices, ensuring data quality, security, and compliance.
+Design and implement data models for efficient data retrieval and analysis.
+
+
+Big Data and Data Warehousing:
+
+Lead the design and implementation of data pipelines, ETL processes, and data workflows.
+Optimize data storage and retrieval mechanisms within the data lake architecture.
+Collaborate with Data Engineers to enhance data processing efficiency.
+
+
+
+
+AI and ML Integration:
+
+Explore opportunities to leverage AI and ML techniques for data-driven insights.
+Work closely with Data Scientists to integrate ML models into our data ecosystem.
+Champion the adoption of AI/ML technologies across the organization.
+
+
+
+
+Creating Techno-Functional Proposals:
+
+Proactively identify areas for improvement, propose new ideas, and contribute to the evolution of our technical solutions.
+Develop techno-functional proposals that address business challenges, enhance efficiency, and drive innovation.
+
+
+
+
+Participation in Organization-Level Programs/Initiatives:
+
+Engage in strategic initiatives, such as technology roadmaps, process improvements, and cross-team collaborations.
+Represent the architecture team in organization-wide forums and contribute to shaping the company’s technical direction.
+
+
+
+
+Cross-Tribal Collaboration:
+
+Collaborate with Tribes and Chapters to align architectural decisions and foster knowledge sharing.
+Facilitate cross-tribal coordination to ensure consistency and coherence in data solutions.
+
+
+
+
+Communication and Coordination:
+
+Communicate complex technical concepts effectively to both technical and non-technical stakeholders.
+Coordinate with development teams, product owners, and business analysts to deliver high-quality solutions.
+
+
+
+
+Required Skills and Qualifications:
+
+Education: Bachelor’s degree in Computer Science or related field (Master’s preferred).
+Experience: Over 15 years of experience in software architecture, with a focus on Big Data, Data Warehousing, and AI/ML.
+Technical Proficiency:
+
+Profound knowledge of Big Data technologies (Hadoop, Spark, Kafka, etc.) and cloud-based data platforms (AWS, Azure, GCP).
+Strong understanding of data warehousing concepts, including data modeling, schema design, and performance optimization.
+Familiarity with AI/ML frameworks and their integration into data pipelines.
+
+
+Communication Skills:
+
+Excellent verbal and written communication skills.
+Ability to collaborate across diverse teams and influence technical decisions.
+
+
+Coordination Abilities:
+
+Proven track record of coordinating complex projects and managing cross-functional teams.
+Strong problem-solving skills and adaptability.
+
+
+
+
+If you are passionate about driving innovation, solving complex data challenges, and leading architectural transformations, we encourage you to apply for this exciting opportunity!
+
+
+
+
+      
+   
