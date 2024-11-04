@@ -1,0 +1,487 @@
+I'll help you create a Python solution for this portfolio optimization problem that uses OLS to improve the Sharpe ratio.
+
+
+
+```python
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from scipy.optimize import minimize
+
+def load_and_prepare_data(assets_file, signals_file):
+    """
+    Load and prepare the assets and signals data
+    """
+    assets_df = pd.read_csv(assets_file)
+    signals_df = pd.read_csv(signals_file)
+    
+    return assets_df.values, signals_df.values
+
+def calculate_beta_coefficients(X, y):
+    """
+    Calculate beta coefficients using OLS for each asset
+    """
+    beta_coefficients = []
+    
+    for asset_idx in range(y.shape[1]):
+        model = LinearRegression(fit_intercept=True)
+        model.fit(X, y[:, asset_idx])
+        beta_coefficients.append(model.coef_)
+    
+    return np.array(beta_coefficients)
+
+def calculate_optimal_weights(signals, beta_coefficients):
+    """
+    Calculate optimal portfolio weights using the signals and beta coefficients
+    """
+    return np.dot(signals, beta_coefficients.T)
+
+def calculate_portfolio_returns(weights, returns):
+    """
+    Calculate portfolio returns given weights and asset returns
+    """
+    # Normalize weights to sum to 1
+    weights = weights / np.sum(np.abs(weights))
+    return np.sum(weights * returns, axis=1)
+
+def calculate_sharpe_ratio(returns, risk_free_rate=0.0):
+    """
+    Calculate the Sharpe ratio of a portfolio
+    """
+    excess_returns = returns - risk_free_rate
+    return np.mean(excess_returns) / np.std(excess_returns) * np.sqrt(252)  # Annualized
+
+def optimize_portfolio():
+    # Load in-sample data
+    in_sample_assets, in_sample_signals = load_and_prepare_data(
+        'input_Assets.csv', 
+        'input_Signals.csv'
+    )
+    
+    # Load out-sample data
+    out_sample_assets, out_sample_signals = load_and_prepare_data(
+        'output_Assets_smpl.csv', 
+        'output_Signals_smpl.csv'
+    )
+    
+    # Calculate beta coefficients using in-sample data
+    beta_coefficients = calculate_beta_coefficients(in_sample_signals, in_sample_assets)
+    
+    # Calculate optimal weights for in-sample data
+    in_sample_weights = calculate_optimal_weights(in_sample_signals, beta_coefficients)
+    
+    # Calculate in-sample portfolio returns and Sharpe ratio
+    in_sample_returns = calculate_portfolio_returns(in_sample_weights, in_sample_assets)
+    in_sample_sharpe = calculate_sharpe_ratio(in_sample_returns)
+    
+    # Calculate optimal weights for out-sample data
+    out_sample_weights = calculate_optimal_weights(out_sample_signals, beta_coefficients)
+    
+    # Calculate out-sample portfolio returns and Sharpe ratio
+    out_sample_returns = calculate_portfolio_returns(out_sample_weights, out_sample_assets)
+    out_sample_sharpe = calculate_sharpe_ratio(out_sample_returns)
+    
+    return {
+        'in_sample_sharpe': in_sample_sharpe,
+        'out_sample_sharpe': out_sample_sharpe,
+        'beta_coefficients': beta_coefficients,
+        'in_sample_weights': in_sample_weights,
+        'out_sample_weights': out_sample_weights
+    }
+
+# Additional optimization techniques to improve out-sample Sharpe ratio
+def optimize_with_regularization(X, y, alpha=0.01):
+    """
+    Use Ridge regression (L2 regularization) to reduce overfitting
+    """
+    from sklearn.linear_model import Ridge
+    model = Ridge(alpha=alpha)
+    model.fit(X, y)
+    return model.coef_
+
+def optimize_with_moving_window(signals, assets, window_size=252):
+    """
+    Implement moving window optimization to capture regime changes
+    """
+    betas_list = []
+    for i in range(window_size, len(signals)):
+        window_signals = signals[i-window_size:i]
+        window_assets = assets[i-window_size:i]
+        beta = calculate_beta_coefficients(window_signals, window_assets)
+        betas_list.append(beta)
+    return np.mean(betas_list, axis=0)
+
+def optimize_with_constraints():
+    """
+    Add portfolio constraints to the optimization
+    """
+    constraints = [
+        {'type': 'eq', 'fun': lambda x: np.sum(x) - 1},  # weights sum to 1
+        {'type': 'ineq', 'fun': lambda x: x - (-0.1)},   # max short position
+        {'type': 'ineq', 'fun': lambda x: 0.2 - x}       # max long position
+    ]
+    return constraints
+
+if __name__ == "__main__":
+    # Run basic optimization
+    results = optimize_portfolio()
+    print(f"In-sample Sharpe ratio: {results['in_sample_sharpe']:.2f}")
+    print(f"Out-sample Sharpe ratio: {results['out_sample_sharpe']:.2f}")
+    
+    # Additional optimization techniques can be applied here
+
+```
+
+I've created a comprehensive solution that implements the portfolio optimization using OLS and provides several methods to improve the out-of-sample Sharpe ratio. Here's a breakdown of the key components:
+
+1. Basic Implementation:
+- Loads and prepares the data from CSV files
+- Calculates beta coefficients using OLS regression
+- Computes optimal weights using the signals and betas
+- Calculates Sharpe ratios for both in-sample and out-of-sample data
+
+2. Optimization Techniques:
+I've included several methods to potentially improve the out-of-sample Sharpe ratio:
+
+a) Regularization:
+- Uses Ridge regression to reduce overfitting
+- Helps stabilize beta coefficients when signals are correlated
+
+b) Moving Window Optimization:
+- Implements a rolling window approach
+- Better captures regime changes and time-varying relationships
+
+c) Portfolio Constraints:
+- Adds position limits
+- Ensures diversification
+- Controls for extreme positions
+
+To improve the out-of-sample Sharpe ratio further, you could:
+
+1. Feature Selection:
+- Remove low-importance signals
+- Use LASSO regression for automatic feature selection
+- Apply PCA to reduce dimensionality
+
+2. Risk Management:
+- Implement volatility targeting
+- Add sector/factor neutrality constraints
+- Include transaction costs in the optimization
+
+3. Advanced Techniques:
+- Use cross-validation for hyperparameter tuning
+- Implement ensemble methods
+- Consider non-linear relationships using alternative models
+
+Would you like me to expand on any of these optimization techniques or modify the implementation in any way?
+######
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Using the data from previous code
+dir_name = r"C:\Users\amankar\Documents\mylearning\lpython\Sharpe Analysis"
+in_sample_assets = pd.read_csv(os.path.join(dir_name,'in_assets_smpl.csv'))
+in_sample_signals = pd.read_csv(os.path.join(dir_name,'in_signals_smpl.csv'))
+
+# Calculate log returns for assets
+in_sample_log_returns = np.log(in_sample_assets / in_sample_assets.shift(1))
+in_sample_log_returns.fillna(0, inplace=True)
+in_sample_log_returns.replace([np.inf, -np.inf], 0, inplace=True)
+
+# 1. Asset-to-Asset Correlation Matrix
+plt.figure(figsize=(12, 8))
+sns.heatmap(in_sample_log_returns.corr(), 
+            cmap='RdBu', 
+            center=0,
+            annot=False,
+            fmt='.2f',
+            square=True)
+plt.title('Asset Returns Correlation Matrix')
+plt.tight_layout()
+plt.show()
+
+# 2. Signal-to-Signal Correlation Matrix
+# Due to large number of signals, let's plot first 20 signals for visibility
+plt.figure(figsize=(12, 8))
+sns.heatmap(in_sample_signals.iloc[:, :20].corr(), 
+            cmap='RdBu',
+            center=0,
+            annot=False,
+            fmt='.2f',
+            square=True)
+plt.title('Signal Correlation Matrix (First 20 Signals)')
+plt.tight_layout()
+plt.show()
+
+# 3. Asset-Signal Correlation Matrix
+# Calculate correlation between assets and signals
+asset_signal_corr = pd.DataFrame(
+    np.corrcoef(in_sample_log_returns.T, in_sample_signals.T)[:len(in_sample_log_returns.columns), len(in_sample_log_returns.columns):],
+    index=in_sample_log_returns.columns,
+    columns=in_sample_signals.columns
+)
+
+# Plot first 20 signals for visibility
+plt.figure(figsize=(15, 8))
+sns.heatmap(asset_signal_corr.iloc[:, :20],
+            cmap='RdBu',
+            center=0,
+            annot=False,
+            fmt='.2f')
+plt.title('Asset Returns vs Signals Correlation Matrix (First 20 Signals)')
+plt.tight_layout()
+plt.show()
+
+# Print some summary statistics
+print("\nCorrelation Summary Statistics:")
+print("\n1. Asset Returns Correlation:")
+print(f"Average absolute correlation: {np.abs(in_sample_log_returns.corr().values).mean():.3f}")
+print(f"Maximum absolute correlation: {np.abs(in_sample_log_returns.corr().values).max():.3f}")
+
+print("\n2. Signals Correlation (first 20 signals):")
+print(f"Average absolute correlation: {np.abs(in_sample_signals.iloc[:, :20].corr().values).mean():.3f}")
+print(f"Maximum absolute correlation: {np.abs(in_sample_signals.iloc[:, :20].corr().values).max():.3f}")
+
+print("\n3. Asset-Signal Correlation (first 20 signals):")
+print(f"Average absolute correlation: {np.abs(asset_signal_corr.iloc[:, :20].values).mean():.3f}")
+print(f"Maximum absolute correlation: {np.abs(asset_signal_corr.iloc[:, :20].values).max():.3f}")
+
+# Find strongest correlations between assets and signals
+print("\nTop 5 Strongest Asset-Signal Correlations:")
+correlations = []
+for asset in asset_signal_corr.index:
+    for signal in asset_signal_corr.columns:
+        correlations.append((asset, signal, asset_signal_corr.loc[asset, signal]))
+
+correlations.sort(key=lambda x: abs(x[2]), reverse=True)
+for asset, signal, corr in correlations[:5]:
+    print(f"{asset} - {signal}: {corr:.3f}")
+##############################################################################END 01###################################################################################################
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+from sklearn.feature_selection import SelectKBest, f_regression, mutual_info_regression
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.preprocessing import StandardScaler
+import os
+
+class PortfolioOptimizer:
+    def __init__(self, dir_name):
+        self.dir_name = dir_name
+        self.load_data()
+        self.preprocess_data()
+        
+    def load_data(self):
+        """Load and initialize all data"""
+        print("Loading data...")
+        self.in_sample_assets = pd.read_csv(os.path.join(self.dir_name, 'in_assets_smpl.csv'))
+        self.in_sample_signals = pd.read_csv(os.path.join(self.dir_name, 'in_signals_smpl.csv'))
+        self.out_sample_assets = pd.read_csv(os.path.join(self.dir_name, 'out_assets_smpl.csv'))
+        self.out_sample_signals = pd.read_csv(os.path.join(self.dir_name, 'out_signals_smpl.csv'))
+        
+        print("Initial shapes:")
+        print(f"In-sample assets shape: {self.in_sample_assets.shape}")
+        print(f"In-sample signals shape: {self.in_sample_signals.shape}")
+        print(f"Out-sample assets shape: {self.out_sample_assets.shape}")
+        print(f"Out-sample signals shape: {self.out_sample_signals.shape}")
+        
+    def preprocess_data(self):
+        """Preprocess all data including log returns calculation"""
+        print("\nPreprocessing data...")
+        # Impute missing values
+        for df in [self.in_sample_assets, self.in_sample_signals, 
+                  self.out_sample_assets, self.out_sample_signals]:
+            df.fillna(df.mean(), inplace=True)
+            
+        # Calculate log returns
+        self.in_sample_log_returns = np.log(self.in_sample_assets / self.in_sample_assets.shift(1))
+        self.out_sample_log_returns = np.log(self.out_sample_assets / self.out_sample_assets.shift(1))
+        
+        for df in [self.in_sample_log_returns, self.out_sample_log_returns]:
+            df.fillna(0, inplace=True)
+            df.replace([np.inf, -np.inf], 0, inplace=True)
+            
+        # Standardize signals
+        self.scaler = StandardScaler()
+        self.scaled_in_signals = pd.DataFrame(
+            self.scaler.fit_transform(self.in_sample_signals),
+            columns=self.in_sample_signals.columns
+        )
+        self.scaled_out_signals = pd.DataFrame(
+            self.scaler.transform(self.out_sample_signals),
+            columns=self.out_sample_signals.columns
+        )
+        
+    def plot_correlation_matrices(self):
+        """Plot correlation matrices for assets and signals"""
+        print("\nPlotting correlation matrices...")
+        
+        # 1. Asset-to-Asset Correlation
+        plt.figure(figsize=(12, 8))
+        sns.heatmap(self.in_sample_log_returns.corr(), 
+                   cmap='RdBu', 
+                   center=0,
+                   annot=False,
+                   square=True)
+        plt.title('Asset Returns Correlation Matrix')
+        plt.tight_layout()
+        plt.show()
+        
+        # 2. Signal-to-Signal Correlation (first 20)
+        plt.figure(figsize=(12, 8))
+        sns.heatmap(self.in_sample_signals.iloc[:, :20].corr(), 
+                   cmap='RdBu',
+                   center=0,
+                   annot=False,
+                   square=True)
+        plt.title('Signal Correlation Matrix (First 20 Signals)')
+        plt.tight_layout()
+        plt.show()
+        
+        # 3. Asset-Signal Correlation
+        asset_signal_corr = pd.DataFrame(
+            np.corrcoef(self.in_sample_log_returns.T, self.in_sample_signals.T)
+            [:len(self.in_sample_log_returns.columns), 
+             len(self.in_sample_log_returns.columns):],
+            index=self.in_sample_log_returns.columns,
+            columns=self.in_sample_signals.columns
+        )
+        
+        plt.figure(figsize=(15, 8))
+        sns.heatmap(asset_signal_corr.iloc[:, :20],
+                   cmap='RdBu',
+                   center=0,
+                   annot=False)
+        plt.title('Asset Returns vs Signals Correlation Matrix (First 20 Signals)')
+        plt.tight_layout()
+        plt.show()
+        
+        return asset_signal_corr
+        
+    def select_features(self, k=20):
+        """Perform feature selection using multiple methods"""
+        print(f"\nSelecting top {k} features...")
+        importance_scores = {}
+        
+        # Calculate importance scores for each asset
+        for asset in self.in_sample_log_returns.columns:
+            importance_scores[asset] = {}
+            
+            # F-regression
+            f_scores, _ = f_regression(self.scaled_in_signals, self.in_sample_log_returns[asset])
+            importance_scores[asset]['f_regression'] = f_scores
+            
+            # Mutual Information
+            mi_scores = mutual_info_regression(self.scaled_in_signals, self.in_sample_log_returns[asset])
+            importance_scores[asset]['mutual_info'] = mi_scores
+            
+            # Random Forest
+            rf = RandomForestRegressor(n_estimators=100, random_state=42)
+            rf.fit(self.scaled_in_signals, self.in_sample_log_returns[asset])
+            importance_scores[asset]['random_forest'] = rf.feature_importances_
+            
+        # Aggregate scores
+        aggregated_scores = pd.DataFrame(index=self.in_sample_signals.columns)
+        for method in ['f_regression', 'mutual_info', 'random_forest']:
+            scores = np.mean([importance_scores[asset][method] for asset in self.in_sample_log_returns.columns], axis=0)
+            aggregated_scores[method] = scores / scores.sum()
+            
+        aggregated_scores['composite_score'] = aggregated_scores.mean(axis=1)
+        selected_features = aggregated_scores.nlargest(k, 'composite_score').index.tolist()
+        
+        # Plot top features
+        plt.figure(figsize=(12, 6))
+        top_features = aggregated_scores.nlargest(k, 'composite_score')
+        sns.barplot(x=top_features.index, y=top_features['composite_score'])
+        plt.xticks(rotation=45)
+        plt.title(f'Top {k} Most Important Signals (Composite Score)')
+        plt.tight_layout()
+        plt.show()
+        
+        return selected_features, aggregated_scores
+        
+    def optimize_portfolio(self, selected_features=None):
+        """Perform portfolio optimization using selected features"""
+        print("\nOptimizing portfolio...")
+        signals_to_use = self.in_sample_signals[selected_features] if selected_features else self.in_sample_signals
+        out_signals_to_use = self.out_sample_signals[selected_features] if selected_features else self.out_sample_signals
+        
+        # Fit OLS models and get beta coefficients
+        beta_coefficients = []
+        for asset in self.in_sample_log_returns.columns:
+            model = LinearRegression()
+            model.fit(signals_to_use, self.in_sample_log_returns[asset])
+            beta_coefficients.append(model.coef_)
+        beta_coefficients = np.array(beta_coefficients)
+        
+        # Calculate optimal weights
+        in_sample_weights = np.dot(beta_coefficients, signals_to_use.T)
+        out_sample_weights = np.dot(beta_coefficients, out_signals_to_use.T)
+        
+        # Normalize weights
+        in_sample_weights = in_sample_weights / np.sum(np.abs(in_sample_weights), axis=0, keepdims=True)
+        out_sample_weights = out_sample_weights / np.sum(np.abs(out_sample_weights), axis=0, keepdims=True)
+        
+        # Calculate portfolio returns
+        in_sample_portfolio_returns = np.sum(in_sample_weights * self.in_sample_log_returns.T, axis=0)
+        out_sample_portfolio_returns = np.sum(out_sample_weights * self.out_sample_log_returns.T, axis=0)
+        
+        # Calculate Sharpe ratios
+        in_sharpe = self._calculate_sharpe_ratio(in_sample_portfolio_returns)
+        out_sharpe = self._calculate_sharpe_ratio(out_sample_portfolio_returns)
+        
+        return {
+            'in_sample_sharpe': in_sharpe,
+            'out_sample_sharpe': out_sharpe,
+            'in_sample_weights': in_sample_weights,
+            'out_sample_weights': out_sample_weights
+        }
+        
+    def _calculate_sharpe_ratio(self, returns, risk_free_rate=0):
+        """Calculate annualized Sharpe ratio"""
+        annual_return = np.mean(returns) * 252
+        annual_vol = np.std(returns) * np.sqrt(252)
+        return (annual_return - risk_free_rate) / annual_vol
+
+# Main execution
+def main():
+    dir_name = r"C:\Users\amankar\Documents\mylearning\lpython\Sharpe Analysis"
+    optimizer = PortfolioOptimizer(dir_name)
+    
+    # 1. Plot correlation matrices
+    asset_signal_corr = optimizer.plot_correlation_matrices()
+    
+    # 2. Perform feature selection
+    selected_features, feature_scores = optimizer.select_features(k=20)
+    
+    # 3. Optimize portfolio with all features
+    print("\nOptimizing portfolio with all features...")
+    all_features_results = optimizer.optimize_portfolio()
+    
+    # 4. Optimize portfolio with selected features
+    print("\nOptimizing portfolio with selected features...")
+    selected_features_results = optimizer.optimize_portfolio(selected_features)
+    
+    # Print results
+    print("\nResults Summary:")
+    print("\nUsing All Features:")
+    print(f"In-sample Sharpe Ratio: {all_features_results['in_sample_sharpe']:.2f}")
+    print(f"Out-sample Sharpe Ratio: {all_features_results['out_sample_sharpe']:.2f}")
+    
+    print("\nUsing Selected Features:")
+    print(f"In-sample Sharpe Ratio: {selected_features_results['in_sample_sharpe']:.2f}")
+    print(f"Out-sample Sharpe Ratio: {selected_features_results['out_sample_sharpe']:.2f}")
+    
+    # Save results
+    results = pd.DataFrame({
+        'Feature': selected_features,
+        'Importance_Score': feature_scores.loc[selected_features, 'composite_score']
+    })
+    results.to_csv(os.path.join(dir_name, 'selected_features.csv'), index=False)
+
+if __name__ == "__main__":
+    main()
