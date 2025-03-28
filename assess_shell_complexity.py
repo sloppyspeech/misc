@@ -31,7 +31,7 @@ class ShellScriptComplexityAnalyzer:
             # Add line count to complexity score
             self._assess_line_count_complexity()
             
-            # Run other complexity assessment methods
+            # Run all complexity assessment methods
             script_content = ''.join(script_lines)
             self._assess_control_structures(script_content)
             self._assess_external_commands(script_content)
@@ -84,6 +84,24 @@ class ShellScriptComplexityAnalyzer:
         else:
             self.complexity_score += 12
     
+    def _assess_control_structures(self, content):
+        """
+        Assess complexity based on control structures
+        """
+        # Complexity points for different control structures
+        control_structures = [
+            (r'\bif\b.*\bthen\b', 2),    # Simple if statements
+            (r'\bcase\b', 3),            # Case statements
+            (r'\bfor\b.*\bin\b', 2),     # For loops
+            (r'\bwhile\b', 2),           # While loops
+            (r'\buntil\b', 2),           # Until loops
+            (r'\belif\b', 3)             # Nested if-else conditions
+        ]
+        
+        for pattern, points in control_structures:
+            matches = re.findall(pattern, content, re.MULTILINE)
+            self.complexity_score += len(matches) * points
+    
     def _assess_external_commands(self, content):
         """
         Assess complexity based on external command usage
@@ -107,7 +125,53 @@ class ShellScriptComplexityAnalyzer:
         
         return self.ecosystem_commands
     
-    # Other methods remain the same as in previous implementation
+    def _assess_data_transformations(self, content):
+        """
+        Assess complexity of data transformation operations
+        """
+        transform_patterns = [
+            r'\bawk\b',                  # Text processing
+            r'\bsed\b',                  # Stream editing
+            r'\bgrep\b',                 # Text searching
+            r'\bcut\b',                  # Column extraction
+            r'\bjq\b',                   # JSON processing
+            r'\bxmlstarlet\b'            # XML processing
+        ]
+        
+        for pattern in transform_patterns:
+            matches = re.findall(pattern, content)
+            self.complexity_score += len(matches) * 4
+    
+    def _assess_error_handling(self, content):
+        """
+        Assess error handling complexity
+        """
+        error_handling_patterns = [
+            r'\bset\s+-e\b',             # Exit on error
+            r'\btrap\b',                 # Signal handling
+            r'\bif\s+\[\[.*\]\]\s*;\s*then.*fi',  # Complex error checks
+            r'\bif\s+\(\($'               # Advanced error conditions
+        ]
+        
+        for pattern in error_handling_patterns:
+            matches = re.findall(pattern, content, re.MULTILINE)
+            self.complexity_score += len(matches) * 3
+    
+    def _assess_configuration_complexity(self, content):
+        """
+        Assess configuration and environment complexity
+        """
+        config_patterns = [
+            r'\bexport\b',               # Environment variables
+            r'\bsource\b',               # Sourcing other scripts
+            r'\bconfig\b',               # Configuration keywords
+            r'\bini\b',                  # Configuration file processing
+            r'\bconfig\.'                # Dot-separated config
+        ]
+        
+        for pattern in config_patterns:
+            matches = re.findall(pattern, content)
+            self.complexity_score += len(matches) * 2
     
     def _classify_complexity(self):
         """
@@ -236,4 +300,16 @@ def batch_analyze_scripts(directory):
     return complexity_summary
 
 # Example usage
-# batch_results = batch_analyze_scripts('/path/to/scripts/directory')
+if __name__ == "__main__":
+    # Example of how to use the script
+    import sys
+    
+    if len(sys.argv) > 1:
+        directory = sys.argv[1]
+        results = batch_analyze_scripts(directory)
+        
+        # Pretty print the results
+        import json
+        print(json.dumps(results, indent=2))
+    else:
+        print("Please provide a directory path")
