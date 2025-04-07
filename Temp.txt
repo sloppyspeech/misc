@@ -1,52 +1,218 @@
-Okay, here is a proposed 18-month training and mentoring plan for Janice, designed to address her weaknesses and build the necessary skills for a Program Manager role, based on Joe's assessment.
+To compare two Snowflake databases with 6000 tables and 10 PB of data efficiently, follow this structured approach using Python:
 
----
+### **1. Schema Comparison**
+**Objective**: Verify that all tables and their structures (columns, data types, constraints) match between databases.
 
-**Janice - Program Manager Development Plan (18 Months)**
+```python
+import snowflake.connector
+from snowflake.connector import DictCursor
 
-**Prepared For:** Janice (Project Manager, Big Data Team)
-**Prepared By:** Joe (Program Manager)
-**Date:** April 3, 2025
-**Goal:** To equip Janice with the necessary skills, knowledge, and experience to successfully transition into a Program Manager role within 18 months.
+def get_table_schema(conn, database, schema, table):
+    query = f"""
+    SELECT 
+        column_name, 
+        data_type, 
+        is_nullable, 
+        ordinal_position
+    FROM {database}.INFORMATION_SCHEMA.COLUMNS
+    WHERE table_schema = '{schema}' AND table_name = '{table}'
+    ORDER BY ordinal_position;
+    """
+    cursor = conn.cursor(DictCursor).execute(query)
+    return cursor.fetchall()
 
-**Approach:** This plan combines formal training, targeted mentoring by Joe, peer learning, self-study, and practical application through gradually increasing responsibilities. Regular review meetings (monthly initially, then quarterly) between Joe and Janice will track progress, adjust the plan as needed, and provide ongoing feedback.
+def compare_schemas(source_conn, target_conn, database, schema, table):
+    source_schema = get_table_schema(source_conn, database, schema, table)
+    target_schema = get_table_schema(target_conn, database, schema, table)
+    
+    if len(source_schema) != len(target_schema):
+        return False, "Column count mismatch"
+    
+    for src_col, tgt_col in zip(source_schema, target_schema):
+        if (src_col['column_name'] != tgt_col['column_name'] or
+            src_col['data_type'] != tgt_col['data_type'] or
+            src_col['is_nullable'] != tgt_col['is_nullable']):
+            return False, f"Column {src_col['column_name']} mismatch"
+    
+    return True, "Schema matches"
+```
 
-**Development Plan Table:**
+### **2. Row Count Comparison**
+**Objective**: Ensure the number of rows in each table matches.
 
-| Activity                                      | Description                                                                                                                               | Actor(s)                                     | Duration          | Timeline Guide (Months) | Status       |
-| :-------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------- | :---------------- | :---------------------- | :----------- |
-| **Phase 1: Foundational Strengthening (Months 1-6)** |                                                                                                                                   |                                              |                   |                         |              |
-| 1. Mentoring Kick-off & Goal Setting        | Discuss career goals, Program Manager competencies, review strengths/weaknesses, and align on the development plan objectives.              | Joe, Janice                                  | 1 Session (2 hrs) | Month 1                 | Not Started  |
-| 2. Stress Management & Composure Training   | Formal training (internal/external) on managing stress, developing resilience, and techniques for measured responses under pressure.        | HR/Training Dept, Janice                     | 1-2 Days          | Month 1-2               | Not Started  |
-| 3. Active Listening & Communication Workshop  | Focus on techniques to pause, process information, and formulate thoughtful responses, especially when busy or challenged.               | HR/Training Dept, Janice                     | 1 Day             | Month 2-3               | Not Started  |
-| 4. Technical Deep Dive - Current Perimeter  | Identify key technical areas within Big Data relevant to her projects. Plan for self-study, internal knowledge sessions, or online courses. | Janice, Joe, Technical Lead(s)               | Ongoing           | Month 1-6               | Not Started  |
-| 5. Presentation Fundamentals Training       | Course covering slide design principles (clarity, conciseness, visual appeal) and structuring effective presentations.                      | HR/Training Dept, Janice                     | 1-2 Days          | Month 3-4               | Not Started  |
-| 6. Mentoring: Handling Difficult Q&A        | Role-playing scenarios where Janice practices responding to tough questions calmly and thoughtfully. Feedback provided by Joe.              | Joe, Janice                                  | Monthly Sessions  | Month 1-6               | Not Started  |
-| 7. Mentoring: Delegation Practice (Small Scale) | Identify specific, lower-risk tasks Janice can delegate within her project team. Discuss strategy, trust, and follow-up.             | Joe, Janice                                  | Monthly Sessions  | Month 3-6               | Not Started  |
-| **Phase 2: Skill Expansion & Application (Months 7-12)** |                                                                                                                                   |                                              |                   |                         |              |
-| 8. Program Management Fundamentals Training | Formal training covering core concepts: program lifecycle, governance, stakeholder management (strategic level), risk/issue mgmt (program level). | HR/Training Dept, Janice                     | 3-5 Days          | Month 7-8               | Not Started  |
-| 9. Shadowing: Program Governance Meetings | Janice attends program-level steering committees or review meetings chaired by Joe or other Program Managers to observe dynamics.         | Joe, Other Program Managers, Janice          | 2-4 Meetings      | Month 7-12              | Not Started  |
-| 10. Advanced Presentation & Delivery Skills | Training or coaching focusing on delivery style, storytelling, engaging the audience, and handling challenging audiences.                 | HR/Training Dept / External Coach, Janice    | 2 Days / Coaching Pkg | Month 9-10              | Not Started  |
-| 11. Technical Mentoring Sessions           | Structured sessions with technical architects or senior engineers to deepen understanding of the technology stack and architecture.        | Technical Lead(s)/Architect(s), Janice       | Bi-Monthly        | Month 7-12              | Not Started  |
-| 12. Mentoring: Program-Level Perspective    | Joe discusses program strategy, cross-project dependencies, resource allocation challenges, and budget considerations with Janice.        | Joe, Janice                                  | Monthly Sessions  | Month 7-12              | Not Started  |
-| 13. Applied Delegation & Workload Mgmt      | Janice actively delegates significant project tasks/workstreams, focusing on outcomes. Joe provides support and feedback.                 | Janice, Joe                                  | Ongoing Practice  | Month 7-12              | Not Started  |
-| 14. Presentation Practice & Feedback       | Janice prepares and delivers sections of project updates or deep dives in internal meetings. Joe provides specific feedback on materials & delivery. | Janice, Joe                                  | As opportunities arise | Month 7-12              | Not Started  |
-| **Phase 3: Strategic Exposure & Transition (Months 13-18)** |                                                                                                                                   |                                              |                   |                         |              |
-| 15. Financial Management for Programs        | Training on program-level budgeting, forecasting, and financial tracking/reporting within the bank's context.                            | HR/Finance Dept/Training, Janice             | 1-2 Days          | Month 13-14             | Not Started  |
-| 16. Program Risk Management Workshop        | Focus on identifying, assessing, and managing risks at the program level, including inter-project dependencies.                             | HR/Training Dept / Joe, Janice               | 1 Day             | Month 14                | Not Started  |
-| 17. Lead a Cross-Functional Initiative      | Assign Janice lead responsibility for a small, cross-project initiative or a significant program-level task (e.g., integrated plan reporting). | Joe, Janice                                  | 3-6 Months        | Month 13-18             | Not Started  |
-| 18. Develop & Present Program Section       | Janice prepares and presents a significant section of a program review to senior stakeholders, with Joe's coaching and support.          | Janice, Joe                                  | 1-2 Instances     | Month 15-18             | Not Started  |
-| 19. Mentoring: Strategic Alignment          | Discussions focusing on how programs align with business strategy, benefits realization, and navigating organizational politics.           | Joe, Janice                                  | Bi-Monthly        | Month 13-18             | Not Started  |
-| 20. Network with other Program Managers     | Encourage Janice to connect with other Program Managers in the bank for informal mentoring and understanding different styles/challenges. | Janice, Peer Program Managers                | Ongoing           | Month 13-18             | Not Started  |
-| 21. Final Review & Role Readiness Assessment | Formal review of progress against the plan and assessment of readiness for a Program Manager role. Next steps defined.                  | Joe, Janice, Senior Management (potentially) | 1 Session         | Month 18                | Not Started  |
+```python
+def compare_row_counts(source_conn, target_conn, database, schema, table):
+    query = f"SELECT COUNT(*) FROM {database}.{schema}.{table};"
+    source_count = source_conn.cursor().execute(query).fetchone()[0]
+    target_count = target_conn.cursor().execute(query).fetchone()[0]
+    return source_count == target_count, (source_count, target_count)
+```
 
----
+### **3. Data Sampling & Statistical Comparison**
+**Objective**: Compare a subset of data using date ranges and statistical metrics.
 
-**Key Success Factors:**
+#### **3.1 Identify Date Column**
+Automatically detect a date column for sampling (e.g., `created_at`).
 
-* **Janice's Commitment:** Requires active participation, willingness to learn, and application of new skills.
-* **Joe's Mentorship:** Requires dedicated time for coaching, providing constructive feedback, and creating opportunities for growth.
-* **Organizational Support:** Access to training resources and opportunities to take on developmental assignments.
-* **Regular Feedback & Adjustment:** The plan should be a living document, reviewed and adapted based on Janice's progress and evolving needs.
+```python
+def get_date_column(conn, database, schema, table):
+    query = f"""
+    SELECT column_name
+    FROM {database}.INFORMATION_SCHEMA.COLUMNS
+    WHERE table_schema = '{schema}' 
+      AND table_name = '{table}'
+      AND data_type IN ('DATE', 'TIMESTAMP_NTZ', 'TIMESTAMP_LTZ')
+    LIMIT 1;
+    """
+    cursor = conn.cursor().execute(query)
+    result = cursor.fetchone()
+    return result[0] if result else None
+```
 
-This structured approach addresses Janice's specific development areas while progressively building the broader strategic and operational skills required for a Program Manager.
+#### **3.2 Generate Stats Query**
+Build a dynamic SQL query to compute column statistics.
+
+```python
+def generate_stats_query(table_ref, date_col, start_date, end_date):
+    columns = get_table_columns(source_conn, database, schema, table)
+    query_parts = []
+    
+    for col in columns:
+        col_name = col['column_name']
+        data_type = col['data_type']
+        
+        if data_type in ('NUMBER', 'INT', 'FLOAT', 'DECIMAL'):
+            stats = f"""
+            SELECT '{col_name}' AS column_name,
+                   MIN({col_name}) AS min_val,
+                   MAX({col_name}) AS max_val,
+                   AVG({col_name}) AS avg_val
+            FROM {table_ref}
+            WHERE {date_col} BETWEEN '{start_date}' AND '{end_date}'
+            """
+        elif data_type in ('VARCHAR', 'STRING', 'TEXT'):
+            stats = f"""
+            SELECT '{col_name}' AS column_name,
+                   MIN(LENGTH({col_name})) AS min_length,
+                   MAX(LENGTH({col_name})) AS max_length,
+                   COUNT(DISTINCT {col_name}) AS distinct_count
+            FROM {table_ref}
+            WHERE {date_col} BETWEEN '{start_date}' AND '{end_date}'
+            """
+        elif data_type in ('DATE', 'TIMESTAMP'):
+            stats = f"""
+            SELECT '{col_name}' AS column_name,
+                   MIN({col_name}) AS min_date,
+                   MAX({col_name}) AS max_date
+            FROM {table_ref}
+            WHERE {date_col} BETWEEN '{start_date}' AND '{end_date}'
+            """
+        query_parts.append(stats)
+    
+    return " UNION ALL ".join(query_parts)
+```
+
+#### **3.3 Compare Stats**
+Execute the query on both databases and compare results.
+
+```python
+def compare_data_stats(source_conn, target_conn, query):
+    source_stats = source_conn.cursor(DictCursor).execute(query).fetchall()
+    target_stats = target_conn.cursor(DictCursor).execute(query).fetchall()
+    
+    discrepancies = []
+    for src, tgt in zip(source_stats, target_stats):
+        if src != tgt:
+            discrepancies.append((src['column_name'], src, tgt))
+    
+    return discrepancies
+```
+
+### **4. Orchestration & Parallelization**
+Use parallel processing to handle 6000 tables efficiently.
+
+```python
+from concurrent.futures import ThreadPoolExecutor
+
+def compare_tables(source_conn, target_conn, database, schema, tables):
+    with ThreadPoolExecutor(max_workers=10) as executor:
+        futures = []
+        for table in tables:
+            future = executor.submit(
+                compare_single_table,
+                source_conn, target_conn, database, schema, table
+            )
+            futures.append(future)
+        
+        for future in futures:
+            # Log results or handle exceptions
+            future.result()
+
+def compare_single_table(source_conn, target_conn, database, schema, table):
+    # Step 1: Schema comparison
+    schema_match, schema_msg = compare_schemas(...)
+    if not schema_match:
+        log_discrepancy(f"Schema mismatch in {table}: {schema_msg}")
+        return
+    
+    # Step 2: Row count comparison
+    count_match, (source_count, target_count) = compare_row_counts(...)
+    if not count_match:
+        log_discrepancy(f"Row count mismatch in {table}: {source_count} vs {target_count}")
+        return
+    
+    # Step 3: Data stats comparison
+    date_col = get_date_column(...)
+    if not date_col:
+        log_discrepancy(f"No date column found in {table}")
+        return
+    
+    query = generate_stats_query(...)
+    discrepancies = compare_data_stats(...)
+    if discrepancies:
+        log_discrepancy(f"Data stats mismatch in {table}: {discrepancies}")
+```
+
+### **5. Statistical Methods for All Data Types**
+- **Numeric Columns**: Compare `min`, `max`, `avg`, and `stddev`.
+- **String Columns**: Compare `min_length`, `max_length`, and `distinct_count`.
+- **Date Columns**: Compare `min_date` and `max_date`.
+
+### **6. Reporting & Logging**
+Store results in a structured format (e.g., CSV, database table) for auditing.
+
+```python
+import csv
+
+def log_discrepancy(message):
+    with open("discrepancies.csv", "a") as f:
+        writer = csv.writer(f)
+        writer.writerow([message])
+```
+
+### **Key Optimizations**
+1. **Dynamic Query Generation**: Minimize round-trips to Snowflake by computing all stats in a single query.
+2. **Parallel Execution**: Use `ThreadPoolExecutor` to compare multiple tables concurrently.
+3. **Date-Based Sampling**: Focus on recent data (e.g., `WHERE date_col > CURRENT_DATE - 30`).
+4. **Efficient Type Handling**: Leverage Snowflake’s metadata to tailor stats per column type.
+
+### **Execution Steps**
+1. **Install Dependencies**:
+   ```bash
+   pip install snowflake-connector-python
+   ```
+2. **Configure Connections**:
+   ```python
+   source_conn = snowflake.connector.connect(
+       user=USER, password=PASSWORD, account=ACCOUNT, 
+       database=SOURCE_DB, schema=SCHEMA
+   )
+   target_conn = snowflake.connector.connect(...)
+   ```
+3. **Run Comparison**:
+   ```python
+   tables = get_all_tables(source_conn)
+   compare_tables(source_conn, target_conn, "MY_DB", "PUBLIC", tables)
+   ```
+
+This approach balances performance and thoroughness by leveraging Snowflake’s compute power for statistical aggregations and Python for orchestration.
