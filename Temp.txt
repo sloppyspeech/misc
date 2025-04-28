@@ -382,3 +382,22 @@ Okay, here are three time-bound goals designed to address the specific behaviora
 * **Gather Feedback:** Your own observations are key, but consider ways to gather feedback from others if appropriate and possible without undermining trust (e.g., observing team interactions, informal chats with other team members about *collaboration* in general).
 
 This structure provides clear expectations, regular touchpoints for feedback and course correction, and measurable criteria to assess improvement over the next two months.
+
+
+
+patterns = [
+        # Standard "X years of experience" pattern
+        r'(\d+(?:\.\d+)?)\+?\s*(?:year|yr)s?(?:\s+of)?\s+experience',
+        
+        # "in this role/industry/field for X years" pattern
+        r'(?:in|at|with)(?:\s+this)?\s+(?:role|position|industry|field|company|organization|job)(?:\s+for)?\s+(\d+(?:\.\d+)?)\+?\s*(?:year|yr)s?',
+        
+        # "I have X years of experience" pattern
+        r'(?:have|having|with)\s+(\d+(?:\.\d+)?)\+?\s*(?:year|yr)s?(?:\s+of)?(?:\s+experience)?',
+        
+        # "Worked for X years" pattern
+        r'worked(?:\s+for)?\s+(\d+(?:\.\d+)?)\+?\s*(?:year|yr)s?',
+        
+        # "X years in" pattern
+        r'(\d+(?:\.\d+)?)\+?\s*(?:year|yr)s?\s+in'
+    ]
