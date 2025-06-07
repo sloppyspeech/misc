@@ -401,3 +401,10 @@ patterns = [
         # "X years in" pattern
         r'(\d+(?:\.\d+)?)\+?\s*(?:year|yr)s?\s+in'
     ]
+
+
+
+Risk ID	Risk Description	Impact	Mitigation Plan & Status		
+R01 (High)	Hiring Delays: Failure to onboard the full 12-member team by the July target date.	Schedule: Inability to run 3+ UAT streams in parallel, delaying the overall program timeline.	In Progress: Executing the accelerated hiring plan. Contingency: Prioritize migration of low-complexity applications first; re-plan UAT waves if delay exceeds 3 weeks.		
+R02 (Med)	Complexity Underestimation: The effort to convert and test highly complex Spark/Scala logic is higher than estimated.	Schedule / Quality: UAT cycles for complex apps may require more than the planned number of sprints, impacting schedule.	Active Mitigation: Close collaboration with Snowflake during conversion. Our agile UAT approach allows for early detection. We are building buffer time into the plan for Q4.		
+R03 (Med)	Vendor Dependency: A slowdown in Snowflake's code conversion or SIT process creates a bottleneck for our UAT factory.	Schedule: Our UAT team could be blocked with no applications ready to test.	Active Mitigation: Strong governance established with weekly progress reviews. Clear entry/exit criteria for handovers. Maintaining a buffer of 2-3 SIT-approved apps in the backlog.		
