@@ -408,3 +408,138 @@ Risk ID	Risk Description	Impact	Mitigation Plan & Status
 R01 (High)	Hiring Delays: Failure to onboard the full 12-member team by the July target date.	Schedule: Inability to run 3+ UAT streams in parallel, delaying the overall program timeline.	In Progress: Executing the accelerated hiring plan. Contingency: Prioritize migration of low-complexity applications first; re-plan UAT waves if delay exceeds 3 weeks.		
 R02 (Med)	Complexity Underestimation: The effort to convert and test highly complex Spark/Scala logic is higher than estimated.	Schedule / Quality: UAT cycles for complex apps may require more than the planned number of sprints, impacting schedule.	Active Mitigation: Close collaboration with Snowflake during conversion. Our agile UAT approach allows for early detection. We are building buffer time into the plan for Q4.		
 R03 (Med)	Vendor Dependency: A slowdown in Snowflake's code conversion or SIT process creates a bottleneck for our UAT factory.	Schedule: Our UAT team could be blocked with no applications ready to test.	Active Mitigation: Strong governance established with weekly progress reviews. Clear entry/exit criteria for handovers. Maintaining a buffer of 2-3 SIT-approved apps in the backlog.		
+
+
+
+
+
+Phase,Task ID,Task Description,Estimated Duration (Weeks),Responsible Roles,Notes/Key Deliverables
+"Spark/Scala to dbt/Snowflake Migration",,,,,,
+Discovery & Assessment,,(Understanding Current & Defining Target),,,Goal: Comprehensive understanding of existing system and clear target architecture.
+,1.1,"Current State Analysis:",,,,
+,1.1.1,Inventory Spark Jobs & Scala Code Functionality,2-4,"Data Architects, Lead Data Engineer",Documented list of jobs, business logic.
+,1.1.2,Map Data Sources & Ingestion Mechanisms,1-2,"Data Architects, Data Engineers",Data source catalog, ingestion flows.
+,1.1.3,Catalog Data Models & Schema (Hadoop),2-3,"Data Architects, Data Engineers",Schema definitions, data types, partitioning.
+,1.1.4,Assess Data Volume, Velocity & Growth,1,"Data Architects, Data Engineers",Data statistics, growth projections.
+,1.1.5,Identify Dependencies & Downstream Consumers,2-3,"Data Architects, Business Analysts",Dependency diagrams, stakeholder list.
+,1.1.6,Capture Performance Baselines (Spark),1-2,Data Engineers,Performance metrics (runtime, resource usage).
+,1.2,"Target State Definition:",,,,
+,1.2.1,Design Snowflake Architecture (Databases, Schemas, Warehouses),2-3,"Data Architects, Snowflake Admins","Snowflake architecture diagrams, security model. [Image of Snowflake Data Platform Architecture]"
+,1.2.2,Define dbt Project Structure & Standards,1-2,"Data Architects, Lead Data Engineer",dbt folder structure, naming conventions, materialization guidelines.
+,1.2.3,Plan Data Ingestion Strategy to Snowflake,1-2,"Data Engineers, Snowflake Admins",Ingestion pipeline design (Snowpipe, COPY INTO).
+,1.2.4,Define CI/CD Strategy for dbt Projects,1,"DevOps Engineer, Lead Data Engineer",CI/CD pipeline design, tooling selection.
+"Environment Setup & Data Ingestion",,"(Setting up Infrastructure & Migrating Raw Data)",,,Goal: Fully functional Snowflake & dbt environments with raw data loaded.
+,2.1,"Snowflake Environment Setup:",,,,
+,2.1.1,Configure Snowflake Account, Network Policies,1-2,"Snowflake Admins, DevOps Engineer",Secure Snowflake access.
+,2.1.2,Create Virtual Warehouses, Databases, Schemas,1,Snowflake Admins,Initial Snowflake environment.
+,2.1.3,Set up Users, Roles, & Access Control,1,Snowflake Admins,Secure access for team members.
+,2.2,"dbt Environment Setup:",,,,
+,2.2.1,Install & Configure dbt Core/Cloud,0.5,Data Engineers,dbt accessibility for developers.
+,2.2.2,Initialize dbt Project & Connect to Snowflake,0.5,Data Engineers,Basic dbt project setup.
+,2.2.3,Integrate dbt Project with Version Control,0.5,"Data Engineers, DevOps Engineer",Code versioning and collaboration.
+,2.3,"Data Ingestion from Hadoop to Snowflake:",,,,
+,2.3.1,Migrate Historical Data (HDFS to Cloud Storage/Snowflake),2-6+,Data Engineers,Historical data available in Snowflake.
+,2.3.2,Set up Incremental Data Loading Pipelines,2-4,Data Engineers,Ongoing data freshness in Snowflake.
+"Transformation Migration",,"(Converting Spark/Scala Logic to dbt/SQL)",,,Goal: All Spark/Scala transformations replicated as dbt models in Snowflake.
+,3.1,"Code Conversion Strategy:",,,,
+,3.1.1,Prioritize Spark Jobs for Migration,1,"Lead Data Engineer, Business Stakeholders",Phased migration plan.
+,3.1.2,Deconstruct Complex Spark Logic into Modular dbt Models,Ongoing,Data Engineers,Detailed breakdown of each job.
+,3.1.3,Translate Spark SQL / Scala Logic to Snowflake SQL,Ongoing,Data Engineers,Converted SQL code for dbt models.
+,3.1.4,Re-implement Incremental Logic (dbt Incremental Models),Ongoing,Data Engineers,Efficient incremental processing.
+,3.2,"dbt Model Development:",,,,
+,3.2.1,Develop Staging Models (Raw to Cleaned),Ongoing,Data Engineers,Cleaned, standardized raw data.
+,3.2.2,Develop Intermediate Models (Business Logic),Ongoing,Data Engineers,Reusable, transformed data layers.
+,3.2.3,Develop Mart Models (Consumption Layer),Ongoing,"Data Engineers, Data Analysts",Final, user-ready data marts.
+,3.2.4,Implement dbt Macros & Leverage Packages,Ongoing,Data Engineers,Reusable code, enhanced functionality.
+"Testing & Validation",,"(Ensuring Data Accuracy & Performance)",,,Goal: Verified data integrity, accuracy, and acceptable performance.
+,4.1,"Unit Testing:",,,,
+,4.1.1,Implement dbt Generic & Singular Tests,Ongoing,Data Engineers,Basic data quality checks.
+,4.1.2,Data Diffing (Spark vs. dbt Output),Ongoing,Data Engineers,Row-by-row data comparison.
+,4.2,"Integration Testing:",,,,
+,4.2.1,End-to-End Pipeline Testing (Source to Mart),2-3,"Data Engineers, QA Analysts",Full pipeline functionality.
+,4.2.2,Validate Dependencies,1,Data Engineers,Correct data flow between models.
+,4.3,"Performance Testing & Optimization:",,,,
+,4.3.1,Benchmark dbt Model Performance,2,"Data Engineers, Snowflake Admins",Performance metrics, bottlenecks.
+,4.3.2,Optimize Snowflake Queries, Clustering, Warehouses,Ongoing,"Snowflake Admins, Data Engineers",Improved query speed and cost.
+,4.3.3,Adjust dbt Materialization Strategies,1,Data Engineers,Optimized build times.
+,4.4,"User Acceptance Testing (UAT):",,,,
+,4.4.1,Business User Validation of Data & Reports,2-4,"Business Stakeholders, Data Analysts",Business sign-off on data accuracy.
+"Deployment & Cutover",,"(Go-Live & Transition)",,,Goal: Production deployment of the new platform and decommissioning of old system.
+,5.1,"Production Deployment:",,,,
+,5.1.1,Implement Full CI/CD Pipeline for dbt,2,"DevOps Engineer, Data Engineers",Automated deployments.
+,5.1.2,Set up Production dbt Run Orchestration,1,"DevOps Engineer, Data Engineers",Scheduled production runs.
+,5.2,"Cutover Strategy:",,,,
+,5.2.1,Execute Phased Rollout/Parallel Run,2-4+,"Project Manager, Lead Data Engineer",Smooth transition, minimized risk.
+,5.2.2,Decommission Spark Jobs & Hadoop Infrastructure,2-4,"Data Engineers, Infrastructure Team",Reduced operational costs, streamlined architecture.
+"Post-Migration Monitoring & Support",,"(Ongoing Stability & Optimization)",,,Goal: Stable, performant, and well-maintained data platform.
+,6.1,"Monitoring & Alerting:",,,,
+,6.1.1,Configure Snowflake & dbt Monitoring,1,"DevOps Engineer, Data Engineers",Proactive issue detection.
+,6.1.2,Implement Data Observability Tools,1-2,"Data Engineers, Data Architects",End-to-end data health insights.
+,6.2,"Documentation & Training:",,,,
+,6.2.1,Update All Relevant Documentation,Ongoing,All Team Members,Up-to-date platform knowledge base.
+,6.2.2,Provide Team Training (dbt, Snowflake),1-2,"Lead Data Engineer, External Trainer",Empowered team with new skills.
+"Spark/Scala to Snowflake Snowpark Migration",,,,,,
+Discovery & Assessment,,(Understanding Current & Defining Target),,,Goal: Comprehensive understanding of existing system and clear target architecture.
+,1.1,"Current State Analysis:",,,,
+,1.1.1,Inventory Spark Jobs & Scala Code Functionality,2-4,"Data Architects, Lead Data Engineer",Documented list of jobs, business logic, Spark dependencies.
+,1.1.2,Map Data Sources & Ingestion Mechanisms,1-2,"Data Architects, Data Engineers",Data source catalog, ingestion flows.
+,1.1.3,Catalog Data Models & Schema (Hadoop),2-3,"Data Architects, Data Engineers",Schema definitions, data types, partitioning.
+,1.1.4,Assess Data Volume, Velocity & Growth,1,"Data Architects, Data Engineers",Data statistics, growth projections.
+,1.1.5,Identify Dependencies & Downstream Consumers,2-3,"Data Architects, Business Analysts",Dependency diagrams, stakeholder list.
+,1.1.6,Capture Performance Baselines (Spark),1-2,Data Engineers,Performance metrics (runtime, resource usage).
+,1.2,"Target State Definition:",,,,
+,1.2.1,Design Snowflake Architecture (Databases, Schemas, Warehouses),2-3,"Data Architects, Snowflake Admins","Snowflake architecture diagrams, security model. [Image of Snowflake Data Platform Architecture]"
+,1.2.2,Define Snowpark Project Structure & Standards,1-2,"Data Architects, Lead Data Engineer",Code organization, modularization, versioning.
+,1.2.3,Plan Data Ingestion Strategy to Snowflake,1-2,"Data Engineers, Snowflake Admins",Ingestion pipeline design (Snowpipe, COPY INTO).
+,1.2.4,Define CI/CD Strategy for Snowpark Projects,1,"DevOps Engineer, Lead Data Engineer",CI/CD pipeline design, tooling selection.
+"Environment Setup & Data Ingestion",,"(Setting up Infrastructure & Migrating Raw Data)",,,Goal: Fully functional Snowflake & Snowpark environments with raw data loaded.
+,2.1,"Snowflake Environment Setup:",,,,
+,2.1.1,Configure Snowflake Account, Network Policies,1-2,"Snowflake Admins, DevOps Engineer",Secure Snowflake access.
+,2.1.2,Create Virtual Warehouses, Databases, Schemas,1,Snowflake Admins,Initial Snowflake environment.
+,2.1.3,Set up Users, Roles, & Access Control,1,Snowflake Admins,Secure access for team members.
+,2.2,"Snowpark Environment Setup:",,,,
+,2.2.1,Set up Snowpark Development Environment (IDE, SDK),0.5-1,Data Engineers,Local development setup.
+,2.2.2,Configure Connection to Snowflake,0.5,Data Engineers,Snowpark client connectivity.
+,2.2.3,Integrate Snowpark Project with Version Control,0.5,"Data Engineers, DevOps Engineer",Code versioning and collaboration.
+,2.3,"Data Ingestion from Hadoop to Snowflake:",,,,
+,2.3.1,Migrate Historical Data (HDFS to Cloud Storage/Snowflake),2-6+,Data Engineers,Historical data available in Snowflake.
+,2.3.2,Set up Incremental Data Loading Pipelines,2-4,Data Engineers,Ongoing data freshness in Snowflake.
+"Transformation Migration (Spark/Scala to Snowpark)",,"(Converting Spark/Scala Logic to Snowpark)",,,Goal: All Spark/Scala transformations replicated as Snowpark code.
+,3.1,"Code Conversion Strategy:",,,,
+,3.1.1,Prioritize Spark Jobs for Migration,1,"Lead Data Engineer, Business Stakeholders",Phased migration plan.
+,3.1.2,Map Spark APIs to Snowpark DataFrame APIs,Ongoing,Data Engineers,Understanding of API equivalents.
+,3.1.3,Re-write Scala/Spark Code to Snowpark Python/Scala/Java,Ongoing,Data Engineers,Transformed code for Snowpark.
+,3.1.4,Handle UDFs and Complex Logic Migration,Ongoing,Data Engineers,Conversion of existing UDFs to Snowpark UDFs/UDAFs.
+,3.1.5,Re-implement Incremental Logic (Snowpark),Ongoing,Data Engineers,Efficient incremental processing using Snowpark features.
+,3.2,"Snowpark Application Development:",,,,
+,3.2.1,Develop Snowpark Code for Staging Layer,Ongoing,Data Engineers,Cleaned, standardized raw data.
+,3.2.2,Develop Snowpark Code for Intermediate Layer,Ongoing,Data Engineers,Reusable, transformed data layers.
+,3.2.3,Develop Snowpark Code for Consumption Layer,Ongoing,"Data Engineers, Data Analysts",Final, user-ready data marts.
+,3.2.4,Implement Modular Code & Reusable Functions,Ongoing,Data Engineers,Well-structured, maintainable code.
+"Testing & Validation",,"(Ensuring Data Accuracy & Performance)",,,Goal: Verified data integrity, accuracy, and acceptable performance.
+,4.1,"Unit Testing:",,,,
+,4.1.1,Implement Unit Tests for Snowpark Code,Ongoing,Data Engineers,Code correctness and logic validation.
+,4.1.2,Data Diffing (Spark vs. Snowpark Output),Ongoing,Data Engineers,Row-by-row data comparison.
+,4.2,"Integration Testing:",,,,
+,4.2.1,End-to-End Pipeline Testing (Source to Mart),2-3,"Data Engineers, QA Analysts",Full pipeline functionality.
+,4.2.2,Validate Dependencies,1,Data Engineers,Correct data flow between Snowpark applications.
+,4.3,"Performance Testing & Optimization:",,,,
+,4.3.1,Benchmark Snowpark Job Performance,2,"Data Engineers, Snowflake Admins",Performance metrics, bottlenecks.
+,4.3.2,Optimize Snowflake Queries, Clustering, Warehouses,Ongoing,"Snowflake Admins, Data Engineers",Improved query speed and cost.
+,4.3.3,Optimize Snowpark Code for Performance,1,Data Engineers,Efficient Snowpark operations.
+,4.4,"User Acceptance Testing (UAT):",,,,
+,4.4.1,Business User Validation of Data & Reports,2-4,"Business Stakeholders, Data Analysts",Business sign-off on data accuracy.
+"Deployment & Cutover",,"(Go-Live & Transition)",,,Goal: Production deployment of the new platform and decommissioning of old system.
+,5.1,"Production Deployment:",,,,
+,5.1.1,Implement Full CI/CD Pipeline for Snowpark,2,"DevOps Engineer, Data Engineers",Automated deployments.
+,5.1.2,Set up Production Snowpark Job Orchestration,1,"DevOps Engineer, Data Engineers",Scheduled production runs (e.g., Tasks, Airflow).
+,5.2,"Cutover Strategy:",,,,
+,5.2.1,Execute Phased Rollout/Parallel Run,2-4+,"Project Manager, Lead Data Engineer",Smooth transition, minimized risk.
+,5.2.2,Decommission Spark Jobs & Hadoop Infrastructure,2-4,"Data Engineers, Infrastructure Team",Reduced operational costs, streamlined architecture.
+"Post-Migration Monitoring & Support",,"(Ongoing Stability & Optimization)",,,Goal: Stable, performant, and well-maintained data platform.
+,6.1,"Monitoring & Alerting:",,,,
+,6.1.1,Configure Snowflake & Snowpark Monitoring,1,"DevOps Engineer, Data Engineers",Proactive issue detection.
+,6.1.2,Implement Data Observability Tools,1-2,"Data Engineers, Data Architects",End-to-end data health insights.
+,6.2,"Documentation & Training:",,,,
+,6.2.1,Update All Relevant Documentation,Ongoing,All Team Members,Up-to-date platform knowledge base.
+,6.2.2,Provide Team Training (Snowpark, Snowflake),1-2,"Lead Data Engineer, External Trainer",Empowered team with new skills.
