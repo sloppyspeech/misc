@@ -543,3 +543,93 @@ Discovery & Assessment,,(Understanding Current & Defining Target),,,Goal: Compre
 ,6.2,"Documentation & Training:",,,,
 ,6.2.1,Update All Relevant Documentation,Ongoing,All Team Members,Up-to-date platform knowledge base.
 ,6.2.2,Provide Team Training (Snowpark, Snowflake),1-2,"Lead Data Engineer, External Trainer",Empowered team with new skills.
+
+
+
+
+Workshop Goal:
+
+To achieve absolute clarity and mutual agreement on the SIT scope, process, criteria, and collaboration model to ensure a high-quality, seamless handover of code to the UAT team.
+Your Team's Mindset for the Workshop:
+
+    Be a Partner, Not a Police Officer: Frame the discussion around mutual success. A good SIT helps them (fewer defects rejected from UAT) and helps you (cleaner code to test).
+    Think Like a UAT Tester: Your primary goal is to prevent issues from ever reaching you. Every question should be viewed through the lens of, "What do I need to be confident in this code before my team spends time on it?"
+    Clarity is Kindness: Ambiguity is the enemy. It's better to over-communicate and document everything now than to argue about expectations later.
+
+Proposed Workshop Agenda & Key Discussion Points
+
+1. Foundational Alignment: The Purpose & Scope of SIT
+
+    Objective of SIT: Let's align on a single statement. Propose: "To verify that the converted Snowpark code is technically sound, meets functional and non-functional requirements, integrates correctly with its components (including Ctrl-M), and is ready for User Acceptance Testing."
+    Scope - What's "In"?
+        Data pipeline functionality (end-to-end run).
+        Validation of all transformation logic.
+        Data integrity checks (no data loss or corruption).
+        Error handling and logging mechanisms.
+        Integration with Ctrl-M for orchestration.
+        Basic performance benchmarks (does it run in a reasonable time?).
+        Parameterization (does the job run correctly with different inputs/dates?).
+    Scope - What's "Out"?
+        Formal business process validation (that's UAT).
+        Extensive performance/load testing (unless specified).
+        User interface testing (if applicable).
+    Roles & Responsibilities (RACI Chart): Let's draft a simple RACI for the SIT phase.
+        Who is Responsible for: SIT Test Plan, Environment Setup, Test Data Provisioning, Test Execution, Defect Fixing, SIT Sign-off, Technical Support (Your Team's Role).
+
+2. The Environment, Data, and Code Strategy
+
+    SIT Environment:
+        How closely will the Snowflake SIT environment mirror UAT/Production? (e.g., warehouse sizes, roles, permissions).
+        Who is responsible for environment setup, maintenance, and cost?
+        What is the process for refreshing the environment if needed?
+    Test Data Strategy (Critical Point):
+        What data will be used? Anonymized production subsets? Generated data?
+        How will data privacy be ensured?
+        Who is responsible for creating, loading, and validating the test data in the SIT environment?
+        Will the test data cover key edge cases (e.g., null values, duplicates, special characters, zero-record files)?
+    Code Deployment:
+        What is the process for deploying code from development to the SIT environment?
+        Which version control system (e.g., Git) and branch will be used for SIT-ready code?
+
+3. SIT Execution & Defect Management
+
+    SIT Test Plan Review:
+        Will the vendor share their Master SIT Test Plan for our review and feedback?
+        How will they ensure their test cases cover all the critical transformations from the original Spark code?
+    Execution Approach:
+        Will they test applications individually or in groups based on dependencies?
+        How will the Ctrl-M orchestration be tested and validated?
+    Defect Management Process (Your Key Interface):
+        Tool: Which tool will be used for defect tracking (e.g., Jira, Azure DevOps)? Let's agree on one.
+        Workflow: What is the defect lifecycle (New -> Assigned -> In Progress -> Ready for Retest -> Closed)?
+        Severity & Priority: Let's agree on standard definitions for Critical, High, Medium, Low.
+        SLAs: What are the agreed-upon Service Level Agreements for fixing defects found in SIT? (e.g., Critical: 24 hours, High: 3 days). This is crucial to prevent SIT from dragging on.
+        Reporting: How will defect status be reported and reviewed? (e.g., daily defect triage meeting).
+
+4. The Finish Line: Exit Criteria & The Handover Package
+
+    Definition of Done (DoD) for SIT - Let's Define It Together: This is the most important part of the workshop. Propose a clear checklist.
+        [ ] 100% of planned SIT test cases have been executed.
+        [ ] Minimum of 95% pass rate for all test cases.
+        [ ] Zero outstanding Critical or High severity defects.
+        [ ] All Medium and Low severity defects are documented and a resolution plan is agreed upon (can be fixed later if UAT is not impacted).
+        [ ] The end-to-end pipeline has been successfully run via Ctrl-M at least X times.
+        [ ] The final SIT Summary Report has been shared and signed off by the Vendor Lead and [Your Name/UAT Lead].
+    The SIT Summary Report: What must this document contain?
+        Executive summary of results.
+        Link to the detailed test execution logs (pass/fail status for every test case).
+        Final defect report showing all bugs raised and their resolution status.
+        Performance benchmark results.
+        A list of any known issues, limitations, or workarounds being handed over.
+    The Handover Package to UAT: What does your team receive when SIT is "done"?
+        The signed-off SIT Summary Report.
+        The final, version-controlled Snowpark code and deployment scripts.
+        The Ctrl-M job definition files.
+        Any environment configuration notes.
+
+5. Collaboration & Communication
+
+    Meeting Cadence: Shall we have a daily 15-minute sync-up during the SIT execution phase?
+    Communication Channels: What is our primary channel for quick questions (e.g., a shared Slack/Teams channel)? When should email be used?
+    Technical Support Process: If the vendor needs technical help from our team (e.g., understanding a business rule, source data questions), what is the process? Who is the designated Point of Contact?
+    Escalation Path: If we have a disagreement or an issue is blocked, what is the agreed-upon escalation path for both sides?
