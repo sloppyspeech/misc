@@ -633,3 +633,41 @@ Proposed Workshop Agenda & Key Discussion Points
     Communication Channels: What is our primary channel for quick questions (e.g., a shared Slack/Teams channel)? When should email be used?
     Technical Support Process: If the vendor needs technical help from our team (e.g., understanding a business rule, source data questions), what is the process? Who is the designated Point of Contact?
     Escalation Path: If we have a disagreement or an issue is blocked, what is the agreed-upon escalation path for both sides?
+
+
+
+
+Phase	Category	Checklist Item	Status	Owner	Comments
+SIT	Environment Setup	SIT Snowflake environment provisioned and accessible			
+SIT	Environment Setup	Test data loaded with proper masking/anonymization			
+SIT	Environment Setup	Network/firewall/VPN access validated			
+SIT	Environment Setup	Integration with Ctrl-M validated for pipeline runs			
+SIT	Code Conversion	Spark/Scala code converted to Snowpark			
+SIT	Code Conversion	Reusable components/utilities migrated and tested			
+SIT	Code Conversion	Transformation logic validated			
+SIT	Test Plan & Data	SIT test cases documented and reviewed			
+SIT	Test Plan & Data	Reference Hive outputs available for comparison			
+SIT	Test Plan & Data	Performance benchmarks identified (if applicable)			
+SIT	Execution Readiness	Batch jobs successfully triggered from Ctrl-M			
+SIT	Execution Readiness	Logging and audit trail mechanisms verified			
+SIT	Execution Readiness	Defect logging mechanism agreed (e.g. JIRA setup)			
+SIT	Sign-off	All SIT test cases executed			
+SIT	Sign-off	Critical and high defects resolved			
+SIT	Sign-off	SIT sign-off document approved			
+UAT	Environment Setup	UAT Snowflake environment available and validated			
+UAT	Environment Setup	Data refresh strategy defined (snapshot/incremental)			
+UAT	Environment Setup	Data availability confirmed (matching SIT scope)			
+UAT	Environment Setup	Users added with proper roles & RBAC setup			
+UAT	Environment Setup	Smoke test of data access and querying successful			
+UAT	Team & Planning	Feature team assigned and oriented			
+UAT	Team & Planning	Feature Team Lead appointed			
+UAT	Team & Planning	UAT sprint start and end dates finalized			
+UAT	Team & Planning	Communication plan shared with stakeholders			
+UAT	Test Assets	UAT test cases approved by business/SMEs			
+UAT	Test Assets	Expected outputs from legacy (Hive) available			
+UAT	Test Assets	Data validation queries prepared and tested			
+UAT	Execution Readiness	Jira/TestRail ready for defect/test case logging			
+UAT	Execution Readiness	Walkthrough of test scenarios done with testers			
+UAT	Execution Readiness	Defect triage process and cadence agreed			
+UAT	Sign-off	Entry criteria met and signed off			
+UAT	Sign-off	Business user(s) or SME allocated for validation			
