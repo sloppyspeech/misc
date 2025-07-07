@@ -671,3 +671,93 @@ UAT	Execution Readiness	Walkthrough of test scenarios done with testers
 UAT	Execution Readiness	Defect triage process and cadence agreed			
 UAT	Sign-off	Entry criteria met and signed off			
 UAT	Sign-off	Business user(s) or SME allocated for validation			
+================================================================================
+graph TD
+    A["<b>Data Build Tool (dbt)</b><br/><br/>A development framework for transforming data in your warehouse using SQL and software engineering best practices."] --- B(dbt Core Concepts)
+    A --- Z(dbt Cloud)
+
+    subgraph dbt Core Concepts
+        direction TB
+        C("<b>Models</b><br/>A <code>.sql</code> file with a <code>SELECT</code> statement. The core building block of dbt.")
+        E("<b>Tests</b><br/>Assertions to ensure data quality and integrity.")
+        F("<b>Documentation</b><br/>Generates a data catalog website from descriptions written in <code>.yml</code> files.")
+        J("<b>Macros & Jinja</b><br/>The programming layer of dbt. Macros are reusable SQL snippets, and Jinja is the templating engine that enables them.")
+        H("<b>Project Configuration</b><br/>Defining how your dbt project runs and connects to your warehouse.")
+        G("<b>Other Key Components</b>")
+    end
+
+    C --> C1("<b>Materializations</b><br/>How models are persisted in the warehouse.<br/>- <b>view:</b> A simple view (default).<br/>- <b>table:</b> A full table rebuild.<br/>- <b>incremental:</b> Appends or updates new records.<br/>- <b>ephemeral:</b> A CTE; not stored in the database.")
+    C --> C2("<b>The DAG (Directed Acyclic Graph)</b><br/>dbt builds a dependency graph of all models to determine the correct order of execution.")
+
+    E --> E1("<b>Generic Tests</b><br/>Pre-defined tests applied to a model or column in a <code>.yml</code> file.<br/><i>e.g., <code>unique</code>, <code>not_null</code>, <code>relationships</code>, <code>accepted_values</code>.</i>")
+    E --> E2("<b>Singular Tests</b><br/>A custom SQL query in the <code>tests</code> folder that passes if it returns no rows.")
+    E --> E3("<b>Source Freshness</b><br/>A test to check if your source data has been loaded recently.")
+
+    F --> F1("<b>Docs Blocks</b><br/>Use Jinja's <code>{% docs %}</code> tag to write multi-line documentation in markdown files.")
+    F --> F2("<b>Exposures</b><br/>Define and document the downstream uses of your dbt project, like dashboards, applications, or ML models.")
+
+    J --> J1("<b>Key Jinja Functions</b><br/>- <code>{{ ref(...) }}</code>: Creates a dependency on another model.<br/>- <code>{{ source(...) }}</code>: References a raw source table.<br/>- <code>{{ config(...) }}</code>: Sets model configurations.<br/>- <code>{% if ... %}</code> / <code>{% for ... %}</code>: Control flow.")
+    J --> J2("<b>Packages (e.g., dbt-utils)</b><br/>Import macros and models from other dbt projects. Managed in <code>packages.yml</code>.")
+
+    H --> H1("<b><code>dbt_project.yml</code></b><br/>The main file for your project. Defines project name, version, and global configs for models, seeds, etc.")
+    H --> H2("<b><code>profiles.yml</code></b><br/>Contains connection details (credentials) for your data warehouse. Kept separate from your project for security.")
+
+    subgraph Other Key Components
+        direction LR
+        L("<b>Seeds</b><br/>Loads static data from CSV files into your warehouse using <code>dbt seed</code>.")
+        M("<b>Snapshots</b><br/>Captures changes in a mutable table over time (Type 2 SCD).")
+        O("<b>Hooks & Operations</b><br/>Advanced features for running custom SQL.<br/>- <b>Hooks:</b> Run before or after models/seeds (<code>pre-hook</code>, <code>post-hook</code>).<br/>- <b>Operations:</b> Standalone SQL run with <code>dbt run-operation</code>.")
+        P("<b>Analyses</b><br/>SQL files in the <code>analyses</code> folder that are compiled by dbt but not run. Used for exploratory work.")
+    end
+
+    subgraph dbt Cloud
+        direction TB
+        Z1("<b>Managed Service for dbt</b><br/>Provides a web-based UI and managed infrastructure for developing and deploying dbt projects.")
+        Z2("<b>Key Features</b><br/>- <b>Cloud IDE:</b> Develop directly in your browser.<br/>- <b>Scheduler:</b> Run jobs on a schedule.<br/>- <b>CI/CD Integration:</b> Automatically run and test on pull requests.<br/>- <b>Metadata API & Explorer:</b> Discover and understand project assets.<br/>- <b>Alerting:</b> Get notified of run failures.")
+    end
+==========================================
+graph TD
+    A["<b>Data Build Tool (dbt)</b><br/><br/>A transformation tool that uses SQL selects to transform, test, and document data in your cloud data warehouse."] --- B(Core Concepts)
+
+    subgraph Core Concepts
+        direction LR
+        C("<b>Models</b><br/>A <code>.sql</code> file containing a <code>SELECT</code> statement. Each model corresponds to a table or view in your warehouse.")
+        I("<b>Materializations</b><br/>The strategy dbt uses to build a model in the warehouse. Configured within the model or <code>dbt_project.yml</code>.")
+        D("<b>Sources</b><br/>Declare the raw tables in your warehouse. Defined in <code>.yml</code> files to be referenced in models.")
+        E("<b>Tests</b><br/>Assertions to ensure data quality. Can be generic (e.g., <code>not_null</code>) or specific SQL queries.")
+        F("<b>Documentation</b><br/>Descriptions for models and columns, which generate a data catalog website.")
+        J("<b>Macros</b><br/>Reusable pieces of SQL, similar to functions in a programming language. Stored in the <code>macros</code> folder.")
+        K("<b>Jinja</b><br/>The templating language that makes dbt dynamic. Used for control flow and functions like <code>{{ ref(...) }}</code>.")
+        L("<b>Seeds</b><br/>CSV files in the <code>seeds</code> directory that can be loaded into the warehouse using <code>dbt seed</code>. Useful for static data.")
+        M("<b>Snapshots</b><br/>Capture changes in a mutable source table over time (Slowly Changing Dimensions - Type 2). Stored in the <code>snapshots</code> folder.")
+        N("<b>Packages</b><br/>Allow you to use and share dbt code from other projects, like the popular <code>dbt-utils</code>.")
+    end
+
+    C --> C1("<b>Example: <code>models/stg_customers.sql</code></b><br/><br/><pre>SELECT<br/>  id as customer_id,<br/>  first_name,<br/>  last_name<br/>FROM {{ source('jaffle_shop', 'customers') }}</pre>")
+    C --- I
+
+    I --> I1("<b>Types</b><br/>- <b>view:</b> (default) A simple view.<br/>- <b>table:</b> A full table rebuild on each run.<br/>- <b>incremental:</b> Inserts or updates new records.<br/>- <b>ephemeral:</b> A CTE, not built in the database.")
+    I --> I2("<b>Example Config</b><br/><pre>{{ config(materialized='incremental') }}<br/><br/>SELECT ...</pre>")
+
+    J --> J1("<b>Example: <code>macros/cents_to_dollars.sql</code></b><br/><br/><pre>{% macro cents_to_dollars(column_name, precision=2) %}<br/>    ({{ column_name }} / 100)::numeric(16, {{ precision }})<br/>{% endmacro %}</pre>")
+
+    K --> K1("<b>Key Functions</b><br/>- <code>{{ ref('model_name') }}</code>: A dependency on another model.<br/>- <code>{{ source('source_name', 'table_name') }}</code>: A dependency on a source table.<br/>- <code>{{ config(...) }}</code>: Sets model configurations.<br/>- <code>{% if ... %}</code>: Conditional logic.")
+
+    M --> M1("<b>Example: <code>snapshots/customers.sql</code></b><br/><br/><pre>{% snapshot customers_snapshot %}<br/><br/>{{<br/>    config(
+          target_schema='snapshots',
+          unique_key='customer_id',
+          strategy='check',
+          check_cols=['first_name', 'last_name'],
+        )
+}}<br/><br/>select * from {{ source('jaffle_shop', 'customers') }}<br/><br/>{% endsnapshot %}</pre>")
+
+    N --> N1("<b>Example: <code>packages.yml</code></b><br/><br/><pre>packages:<br/>  - package: dbt-labs/dbt_utils<br/>    version: 1.1.1</pre><br/>Run <code>dbt deps</code> to install.")
+
+
+    subgraph "High-Level Workflow ⚙️"
+        direction LR
+        P(1. Define Sources & Seeds) --> Q(2. Build Models)
+        Q --> R(3. Write Tests)
+        R --> S(4. Add Docs & Macros)
+        S --> T(5. Run, Test, & Snapshot)
+    end
