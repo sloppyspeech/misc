@@ -761,3 +761,97 @@ graph TD
         R --> S(4. Add Docs & Macros)
         S --> T(5. Run, Test, & Snapshot)
     end
+============================
+mindmap
+  root((dbt Core))
+    Concepts
+      ELT over ETL
+      Transformation Layer
+      Version Control
+      Jinja + SQL
+      Modularity
+      Data Lineage
+    Project Structure
+      dbt_project.yml
+      Models
+        .sql files
+        Materializations
+          Table
+          View
+          Incremental
+          Ephemeral
+      Seeds
+        .csv files
+      Snapshots
+        SCD Type 2
+      Analyses
+      Macros
+      Tests
+      Documentation
+    Key Commands
+      dbt run
+      dbt test
+      dbt seed
+      dbt snapshot
+      dbt docs generate
+      dbt compile
+      dbt debug
+    Modeling
+      Sources
+      Ref Function
+      Model Dependencies
+      Staging Models
+      Mart Models
+      Packages
+    Testing
+      Built-in Tests
+        unique
+        not_null
+        relationships
+        accepted_values
+      Custom Tests
+        .sql tests
+        Generic Tests
+      Schema Tests
+        YAML definitions
+      Data Quality
+    Documentation
+      .yml Files
+      Column Descriptions
+      Model Documentation
+      Lineage Graphs
+      dbt Docs Site
+    Deployment
+      Environments
+        Dev
+        Prod
+      Job Scheduling
+        dbt Cloud
+        Airflow
+        Prefect
+      CI/CD
+        dbt Cloud CI
+        GitHub Actions
+    Advanced Features
+      Jinja Templating
+      Macros
+        Custom Macros
+        Package Macros
+      Hooks
+        pre-hook
+        post-hook
+      Variables
+      Snapshots
+      Custom Schemas
+    Ecosystem
+      dbt Cloud
+      dbt Core
+      Supported Databases
+        Snowflake
+        BigQuery
+        Redshift
+        Postgres
+        Databricks
+      Integrations
+        Data Catalogs
+        BI Tools
