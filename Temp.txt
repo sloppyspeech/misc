@@ -855,3 +855,41 @@ mindmap
       Integrations
         Data Catalogs
         BI Tools
+============================
+Category,Question,Focus Area,Ideal Response Indicators,Rating Scale
+Technical Troubleshooting,1. Our ingestion tool fails to process a new JSON source. Walk me through your debugging steps.,Systematic problem-solving,Checks logs → validates schema → tests sample data → examines transformations → verifies sink permissions. Asks clarifying questions.,1: Random guesses
+,,,,3: Misses key steps
+,,,,5: Methodical$ data-driven approach
+,"→ NEW: 2. How would you handle sudden ""schema drift"" in incoming data that breaks ingestion?",Adaptability to data anomalies,Proposes: Temp rules to accept unexpected fields → alerts → collaborates with source team for long-term fix. Prioritizes pipeline uptime.,1: No solution
+,,,,3: Basic workaround
+,,,,5: Automated mitigation + stakeholder alignment
+Learning Agility,3. Describe learning a complex internal tool with poor documentation. How did you master it?,Self-directed learning,Reverse-engineered configs$ built test cases$ consulted SMEs$ created personal cheatsheets/contributed to docs.,1: Gave up easily
+,,,,3: Learned passively
+,,,,5: Documented gaps/taught others
+,→ NEW: 4. If assigned to optimize a slow ingestion workflow tomorrow$ what’s your learning plan?,Rapid skill application,"""1. Profile current performance 2. Study tool’s optimization docs 3. Consult senior engineers 4. Test in sandbox 5. Monitor results""",1: No plan
+,,,,3: Generic research
+,,,,5: Structured$ metrics-driven experimentation
+Attitude & Ownership,5. A stakeholder reports missing data. You find another team’s code caused it. How do you respond?,Blame-free collaboration,"""1. Fix data gap immediately 2. Inform stakeholder 3. Post-mortem with the team to prevent recurrence. Focus on solution$ not blame.""",1: Blames others
+,,,,3: Fixes but poor communication
+,,,,5: Solves + strengthens process
+,→ NEW: 6. How do you prioritize tasks when managing daily ingestion monitoring AND a long-term tool upgrade project?,Ownership & time management,"""I’d use a Kanban board: critical alerts (P0)$ daily checks (routine)$ project milestones (scheduled blocks). Flag conflicts early.""",1: No system/misses deadlines
+,,,,3: Manages basics
+,,,,5: Proactive$ transparent tradeoff management
+Curiosity & Innovation,7. What Big Data trends/tools excite you? How do you stay updated?,Intellectual curiosity,"""Lakehouse architectures$ CDC tools like Debezium. I take MOOCs$ read Apache blogs$ and test concepts in side projects.""",1: No interest
+,,,,3: Passive consumption
+,,,,5: Hands-on exploration + knowledge sharing
+,→ NEW: 8. You notice our tool lacks data lineage tracking. How would you advocate for adding it?,Proactive improvement mindset,"""Document pain points (e.g.$ debugging time)$ research lightweight solutions (e.g.$ OpenLineage)$ propose a POC with ROI estimates.""",1: Ignores opportunity
+,,,,3: Suggests idea without data
+,,,,5: Builds business case + MVP plan
+Collaboration,→ NEW: 9. How would you train a non-technical stakeholder to use the tool’s self-service ingestion feature?,Knowledge sharing & empathy,"""Create simple video guides → host interactive workshops → build FAQs with error-handling examples. Use analogies$ not jargon.""",1: Dismissive
+,,,,3: Shares docs only
+,,,,5: Tailors training to audience$ measures success
+,→ NEW: 10. A data engineer insists on a technically complex solution$ but your simpler approach meets requirements. How do you align?,Influence without authority,"""Present benchmarks (cost/speed)$ highlight maintainability$ seek feedback. Commit to their plan if justified by scale needs.""",1: Defensive/rigid
+,,,,3: Compromises poorly
+,,,,5: Data-driven$ preserves relationships
+Resilience,→ NEW: 11. Describe a time you failed to solve a technical problem. What did you learn?,Growth mindset,"Example: ""Missed edge case in validation logic → caused data loss. Now I always test with dirty data samples and add alerts.""",1: Blames tools/others
+,,,,3: Surface-level reflection
+,,,,5: Extracted actionable improvements
+,→ NEW: 12. An urgent ingestion failure occurs at 2 AM. How do you react?,Composure under pressure,"""1. Assess impact 2. Roll back if needed 3. Document symptoms 4. Communicate ETAs 5. Post-fix: Root-cause analysis next day.""",1: Panic/delay
+,,,,3: Fixes but no RCA
+,,,,5: Calm$ systematic$ prevents recurrence
