@@ -893,3 +893,229 @@ Resilience,→ NEW: 11. Describe a time you failed to solve a technical problem
 ,→ NEW: 12. An urgent ingestion failure occurs at 2 AM. How do you react?,Composure under pressure,"""1. Assess impact 2. Roll back if needed 3. Document symptoms 4. Communicate ETAs 5. Post-fix: Root-cause analysis next day.""",1: Panic/delay
 ,,,,3: Fixes but no RCA
 ,,,,5: Calm$ systematic$ prevents recurrence
+
+
+==================================
+import os
+import io
+import datetime
+from typing import Dict, List, Any
+
+# Azure Imports
+from azure.storage.blob import BlobServiceClient
+
+# PyArrow Imports
+import pyarrow.parquet as pq
+import pyarrow as pa
+
+# Snowflake Imports
+import snowflake.connector
+
+# ==================== CONFIGURATION ====================
+# --- Azure Blob Storage Configuration ---
+AZURE_STORAGE_CONNECTION_STRING = "DefaultEndpointsProtocol=...;AccountName=...;AccountKey=..."
+AZURE_CONTAINER_NAME = "your-container-name"
+PARQUET_FILE_PREFIX = "path/to/your/files/" # e.g., 'data/my_igc_tool_output/'
+
+# --- Snowflake Configuration ---
+SNOWFLAKE_USER = "your_user"
+SNOWFLAKE_PASSWORD = "your_password"
+SNOWFLAKE_ACCOUNT = "your_account_identifier" # e.g., 'xyz12345.us-east-1'
+SNOWFLAKE_WAREHOUSE = "your_warehouse"
+SNOWFLAKE_DATABASE = "your_database"
+SNOWFLAKE_SCHEMA = "your_schema"
+SNOWFLAKE_TABLE = "your_table_name"
+
+# ==================== TYPE MAPPING ====================
+# This dictionary maps PyArrow data types to Snowflake SQL data types.
+# You can customize this mapping based on your needs.
+type_mapping: Dict[str, str] = {
+    'string': 'VARCHAR',
+    'int64': 'NUMBER(38,0)',
+    'int32': 'NUMBER(38,0)',
+    'double': 'FLOAT',
+    'bool': 'BOOLEAN',
+    'timestamp[ns]': 'TIMESTAMP_NTZ',
+    'date32[day]': 'DATE',
+    'binary': 'BINARY'
+}
+
+# ==================== MAIN FUNCTIONS ====================
+
+def get_latest_parquet_blob(conn_str: str, container_name: str, prefix: str) -> str:
+    """
+    Connects to Azure Blob Storage and finds the name of the most
+    recently modified Parquet file in the specified path.
+    """
+    print("Connecting to Azure Blob Storage...")
+    try:
+        blob_service_client = BlobServiceClient.from_connection_string(conn_str)
+        container_client = blob_service_client.get_container_client(container_name)
+
+        blobs = container_client.list_blobs(name_starts_with=prefix)
+
+        latest_blob = None
+        latest_time = datetime.datetime.min.replace(tzinfo=datetime.timezone.utc)
+        
+        for blob in blobs:
+            if blob.name.endswith('.parquet') and blob.last_modified > latest_time:
+                latest_time = blob.last_modified
+                latest_blob = blob.name
+        
+        if not latest_blob:
+            raise FileNotFoundError(f"No Parquet files found in '{prefix}'.")
+
+        print(f"Found latest Parquet file: {latest_blob}")
+        return latest_blob
+
+    except Exception as e:
+        print(f"Error accessing Azure Blob Storage: {e}")
+        raise
+
+def get_parquet_schema(conn_str: str, container_name: str, blob_name: str) -> pa.Schema:
+    """
+    Downloads a Parquet file from Azure Blob Storage into memory
+    and returns its PyArrow schema.
+    """
+    print(f"Reading schema from blob: {blob_name}")
+    try:
+        blob_service_client = BlobServiceClient.from_connection_string(conn_str)
+        blob_client = blob_service_client.get_blob_client(container_name, blob_name)
+
+        # Download the blob into an in-memory buffer
+        stream = io.BytesIO()
+        blob_client.download_blob().readinto(stream)
+        stream.seek(0)
+
+        # Read the schema from the in-memory Parquet file
+        parquet_file = pq.ParquetFile(stream)
+        parquet_schema = parquet_file.schema.to_arrow_schema()
+
+        print("Parquet Schema read successfully.")
+        return parquet_schema
+
+    except Exception as e:
+        print(f"Error reading Parquet schema from Azure: {e}")
+        raise
+
+def get_snowflake_schema(conn: snowflake.connector.SnowflakeConnection, table: str) -> Dict[str, str]:
+    """
+    Queries Snowflake's INFORMATION_SCHEMA to get the table's current columns and their data types.
+    """
+    print(f"Fetching current schema for table: {table}")
+    cursor = conn.cursor()
+    try:
+        # Use DESCRIBE TABLE for a direct and fast way to get column details
+        cursor.execute(f"DESCRIBE TABLE {table}")
+        
+        # Snowflake returns column name, type, kind, etc. We only need name and type.
+        results = {row[0].upper(): row[1] for row in cursor}
+        print(f"Snowflake table schema fetched: {results}")
+        return results
+
+    except snowflake.connector.errors.ProgrammingError as e:
+        # This handles the case where the table doesn't exist yet, which is fine
+        if "does not exist" in str(e):
+            print(f"Table {table} does not exist. A new table will be created.")
+            return {}
+        else:
+            print(f"Error fetching Snowflake schema: {e}")
+            raise
+    finally:
+        cursor.close()
+
+def compare_schemas_and_alter(
+    snowflake_conn: snowflake.connector.SnowflakeConnection,
+    parquet_schema: pa.Schema,
+    snowflake_schema: Dict[str, str],
+    db_name: str,
+    schema_name: str,
+    table_name: str
+) -> None:
+    """
+    Compares the Parquet schema with the Snowflake schema and
+    generates an ALTER TABLE or CREATE TABLE statement.
+    """
+    parquet_cols = {field.name.upper(): field.type for field in parquet_schema}
+    new_columns = {
+        col: parquet_type for col, parquet_type in parquet_cols.items()
+        if col not in snowflake_schema
+    }
+
+    if not snowflake_schema:
+        print("Table does not exist in Snowflake. Generating CREATE TABLE DDL.")
+        columns_ddl = [
+            f'"{col_name}" {type_mapping.get(str(col_type), "VARIANT")}'
+            for col_name, col_type in parquet_cols.items()
+        ]
+        ddl = f"CREATE OR REPLACE TABLE {db_name}.{schema_name}.{table_name} (\n  {', '.join(columns_ddl)}\n);"
+        
+        print("Executing CREATE TABLE DDL...")
+        print(ddl)
+        snowflake_conn.cursor().execute(ddl)
+        print("Table created successfully.")
+
+    elif new_columns:
+        print(f"New columns detected: {list(new_columns.keys())}. Generating ALTER TABLE DDL.")
+        alter_statements = []
+        for col_name, col_type in new_columns.items():
+            snowflake_type = type_mapping.get(str(col_type), "VARIANT")
+            alter_statements.append(f'ADD COLUMN "{col_name}" {snowflake_type}')
+        
+        alter_ddl = f"ALTER TABLE {db_name}.{schema_name}.{table_name} {', '.join(alter_statements)};"
+        
+        print("Executing ALTER TABLE DDL...")
+        print(alter_ddl)
+        snowflake_conn.cursor().execute(alter_ddl)
+        print("Table schema updated successfully.")
+
+    else:
+        print("Schemas are in sync. No changes needed.")
+
+# ==================== SCRIPT EXECUTION ====================
+if __name__ == "__main__":
+    try:
+        # Step 1: Find the latest Parquet file
+        latest_blob_name = get_latest_parquet_blob(
+            AZURE_STORAGE_CONNECTION_STRING,
+            AZURE_CONTAINER_NAME,
+            PARQUET_FILE_PREFIX
+        )
+
+        # Step 2: Read its schema
+        parquet_schema = get_parquet_schema(
+            AZURE_STORAGE_CONNECTION_STRING,
+            AZURE_CONTAINER_NAME,
+            latest_blob_name
+        )
+
+        # Step 3: Connect to Snowflake and get its schema
+        print("Connecting to Snowflake...")
+        with snowflake.connector.connect(
+            user=SNOWFLAKE_USER,
+            password=SNOWFLAKE_PASSWORD,
+            account=SNOWFLAKE_ACCOUNT,
+            warehouse=SNOWFLAKE_WAREHOUSE,
+            database=SNOWFLAKE_DATABASE,
+            schema=SNOWFLAKE_SCHEMA
+        ) as snowflake_conn:
+            snowflake_table_schema = get_snowflake_schema(
+                snowflake_conn,
+                f"{SNOWFLAKE_DATABASE}.{SNOWFLAKE_SCHEMA}.{SNOWFLAKE_TABLE}"
+            )
+
+            # Step 4: Compare schemas and execute DDL
+            compare_schemas_and_alter(
+                snowflake_conn,
+                parquet_schema,
+                snowflake_table_schema,
+                SNOWFLAKE_DATABASE,
+                SNOWFLAKE_SCHEMA,
+                SNOWFLAKE_TABLE
+            )
+        
+        print("\nSchema evolution process completed successfully.")
+
+    except Exception as e:
+        print(f"\nAn error occurred during the process: {e}")
+================================
